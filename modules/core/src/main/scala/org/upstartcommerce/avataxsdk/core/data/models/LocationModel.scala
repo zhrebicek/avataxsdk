@@ -1,0 +1,6 @@
+package org.upstartcommerce.avataxsdk.core.data.models
+import java.sql.Date
+import org.upstartcommerce.avataxsdk.core.data.enums._
+
+final case class LocationModel(id:Option[Int] = None, companyId:Option[Int] = None, locationCode:Option[String] = None, description:Option[String] = None, addressTypeId:Option[AddressTypeId] = None, addressCategoryId:Option[AddressCategoryId] = None, line1:Option[String] = None, line2:Option[String] = None, line3:Option[String] = None, city:Option[String] = None, county:Option[String] = None, region:Option[String] = None, postalCode:Option[String] = None, country:Option[String] = None, isDefault:Option[Boolean] = None, isRegistered:Option[Boolean] = None, dbaName:Option[String] = None, outletName:Option[String] = None, effectiveDate:Option[Date] = None, endDate:Option[Date] = None, lastTransactionDate:Option[Date] = None, registeredDate:Option[Date] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, settings:Option[List[LocationSettingModel]] = None)
+  

@@ -1,0 +1,6 @@
+package org.upstartcommerce.avataxsdk.core.data.models
+import java.sql.Date
+import org.upstartcommerce.avataxsdk.core.data.enums._
+
+final case class NexusModel(id:Option[Int] = None, companyId:Option[Int] = None, country:Option[String] = None, region:Option[String] = None, jurisTypeId:Option[JurisTypeId] = None, jurisdictionTypeId:Option[JurisdictionType] = None, jurisCode:Option[String] = None, jurisName:Option[String] = None, effectiveDate:Option[Date] = None, endDate:Option[Date] = None, shortName:Option[String] = None, signatureCode:Option[String] = None, stateAssignedNo:Option[String] = None, nexusTypeId:Option[NexusTypeId] = None, sourcing:Option[Sourcing] = None, hasLocalNexus:Option[Boolean] = None, localNexusTypeId:Option[LocalNexusTypeId] = None, hasPermanentEstablishment:Option[Boolean] = None, taxId:Option[String] = None, streamlinedSalesTax:Option[Boolean] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, nexusTaxTypeGroup:Option[String] = None, taxAuthorityId:Option[Long] = None, isSellerImporterOfRecord:Option[Boolean] = None)
+  

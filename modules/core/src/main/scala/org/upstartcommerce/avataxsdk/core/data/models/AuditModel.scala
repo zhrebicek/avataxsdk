@@ -1,0 +1,6 @@
+package org.upstartcommerce.avataxsdk.core.data.models
+import java.sql.Date
+import org.upstartcommerce.avataxsdk.core.data.enums._
+
+final case class AuditModel(transactionId:Option[Long] = None, accountId:Option[Int] = None, userId:Option[Int] = None, ipAddress:Option[String] = None, machineName:Option[String] = None, clientName:Option[String] = None, clientVersion:Option[String] = None, adapterName:Option[String] = None, adapterVersion:Option[String] = None, serverName:Option[String] = None, serverVersion:Option[String] = None, referenceId:Option[Long] = None, severityLevelId:Option[Int] = None, serverTimestamp:Option[Date] = None, serverDuration:Option[Int] = None, serviceName:Option[String] = None, operation:Option[String] = None, referenceCode:Option[String] = None, errorMessage:Option[String] = None, auditMessage:Option[String] = None, loadBalancerDuration:Option[Int] = None, recordCount:Option[Int] = None, referenceAuthorization:Option[String] = None, isQueued:Option[Boolean] = None, databaseCallCount:Option[Int] = None, databaseCallDuration:Option[String] = None, remoteCallDuration:Option[String] = None, events:Option[List[AuditEvent]] = None, requestUrl:Option[String] = None, requestBody:Option[String] = None, responseStatus:Option[Int] = None, responseBody:Option[String] = None, remoteCalls:Option[List[AuditModel]] = None)
+  

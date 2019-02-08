@@ -1,0 +1,6 @@
+package org.upstartcommerce.avataxsdk.core.data.models
+import java.sql.Date
+import org.upstartcommerce.avataxsdk.core.data.enums._
+
+final case class CustomerModel(id:Option[Int] = None, companyId:Option[Int] = None, customerCode:Option[String] = None, alternateId:Option[String] = None, name:Option[String] = None, attnName:Option[String] = None, line1:Option[String] = None, line2:Option[String] = None, city:Option[String] = None, postalCode:Option[String] = None, phoneNumber:Option[String] = None, faxNumber:Option[String] = None, emailAddress:Option[String] = None, contactName:Option[String] = None, lastTransaction:Option[Date] = None, createdDate:Option[Date] = None, modifiedDate:Option[Date] = None, country:Option[String] = None, region:Option[String] = None, isBill:Option[Boolean] = None, isShip:Option[Boolean] = None, taxpayerIdNumber:Option[String] = None, certificates:Option[List[CertificateModel]] = None, customFields:Option[List[CustomFieldModel]] = None, exposureZones:Option[List[ExposureZoneModel]] = None, shipTos:Option[List[CustomerModel]] = None)
+  

@@ -1,9 +1,12 @@
 #!/usr/bin/env amm
 
 /*
- * quick one-off script to generate first sketch of model
+ * quick & dirty one-off script to generate first sketch of model
  * does not regenerate file if it exists
  * so far it's not automated (unsure if it's even desired)
+ *
+ * there are far better ways to generate scala api should we want something more useful
+ * down the road
  *
  * @todo: so far does not generate anything optional, recheck how AvaTax cares
  */
@@ -55,7 +58,7 @@ def extractMembers(f:File):CaseClass = {
     .map(_.split("\\s+(?![^\\[]*\\])")) //private Integer id; also take care of spaces in generic types
     .filter(x => x.length == 3 && x.head == "private")
     .map(_.drop(1)) // modifier 'private'
-    .map(xs => Member(xs.head, xs.last))
+    .map(xs => Member(s"Option[${xs.head}]", xs.last, defaultVal = Some("None")))
     .toList
 
   val ccName = f.getName.substring(0, f.getName.lastIndexOf('.'))
