@@ -26,6 +26,7 @@ lazy val scalatestV     = "3.0.5"
 lazy val akkaHttpV      = "10.1.7"
 lazy val akkaStreamV    = "2.5.20"
 lazy val playJsonV      = "2.7.1"
+lazy val akkaHttpJsonV  = "1.24.3"
 lazy val shapelessV     = "2.3.3"
 
 scalaVersion := scala12V
@@ -97,11 +98,12 @@ lazy val client = project
   .settings(
     name := "avataxsdk-client",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http-core" % akkaHttpV,
-      "com.typesafe.akka" %% "akka-stream"    % akkaStreamV,
-      "com.typesafe.play" %% "play-json"      % playJsonV,
-      "com.chuusai"       %% "shapeless"      % shapelessV,
-      "org.scalatest"     %% "scalatest"      % scalatestV % "test"
+      "com.typesafe.akka" %% "akka-http-core"      % akkaHttpV,
+      "com.typesafe.akka" %% "akka-stream"         % akkaStreamV,
+      "com.typesafe.play" %% "play-json"           % playJsonV,
+      "de.heikoseeberger" %% "akka-http-play-json" % akkaHttpJsonV,
+      "com.chuusai"       %% "shapeless"           % shapelessV,
+      "org.scalatest"     %% "scalatest"           % scalatestV % "test"
     ),
   )
   .dependsOn(core)

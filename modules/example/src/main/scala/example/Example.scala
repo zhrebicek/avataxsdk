@@ -13,8 +13,12 @@ object Example extends App {
   implicit val sys: ActorSystem       = ActorSystem()
   implicit val mat: ActorMaterializer = ActorMaterializer()
 
+  val auth = System.getenv("AVATAX_BASE64")
+  val client = AvataxClient(auth)
 
-  val client = AvataxClient()
+  val r = client.listCurrencies("", 0, 0, "")
+  val resp = Await.result(r, 30.seconds)
+  println(resp)
 
 
 }
