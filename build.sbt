@@ -1,4 +1,4 @@
-name := "avatax-client"
+name := "avataxsdk"
 
 resolvers in Global += Resolver.url("upstartcommerce", url("https://upstartcommerce.bintray.com/nochannel"))(Resolver.ivyStylePatterns)
 lazy val bintraySettings: Seq[Setting[_]] = Seq(
@@ -8,6 +8,8 @@ lazy val bintraySettings: Seq[Setting[_]] = Seq(
   bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/synchrony-client.git"),
   bintrayReleaseOnPublish in ThisBuild := false,
   publishMavenStyle := false)
+
+organization in ThisBuild := "org.upstartcommerce"
 
 lazy val notPublishSettings = Seq(
   publishArtifact := false,
@@ -23,7 +25,8 @@ lazy val scalatestV     = "3.0.5"
 
 lazy val akkaHttpV      = "10.1.7"
 lazy val akkaStreamV    = "2.5.20"
-lazy val circeV         = "0.11.1"
+lazy val playJsonV      = "2.7.1"
+lazy val shapelessV     = "2.3.3"
 
 scalaVersion := scala12V
 
@@ -82,20 +85,29 @@ lazy val core = project
   .in(file("modules/core"))
   .settings(commonSettings)
   .settings(
-    name := "avatax-client-core",
+    name := "avataxsdk-core",
+    libraryDependencies ++= Seq(
+      "org.scalatest"     %% "scalatest"      % scalatestV % "test"
+    ),
+  )
+
+lazy val client = project
+  .in(file("modules/client"))
+  .settings(commonSettings)
+  .settings(
+    name := "avataxsdk-client",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core" % akkaHttpV,
       "com.typesafe.akka" %% "akka-stream"    % akkaStreamV,
-      "io.circe"          %% "circe-core"     % circeV,
-      "io.circe"          %% "circe-generic"  % circeV,
-      "io.circe"          %% "circe-parser"   % circeV,
+      "com.typesafe.play" %% "play-json"      % playJsonV,
+      "com.chuusai"       %% "shapeless"      % shapelessV,
       "org.scalatest"     %% "scalatest"      % scalatestV % "test"
     ),
-    libraryDependencies += "net.avalara.avatax" % "avatax-rest-v2-api-java_2.11" % "18.10.3.247"
   )
+  .dependsOn(core)
 
 lazy val example =
   project
     .in(file("modules/example"))
     .settings(commonSettings, notPublishSettings)
-    .dependsOn(core)
+    .dependsOn(client)
