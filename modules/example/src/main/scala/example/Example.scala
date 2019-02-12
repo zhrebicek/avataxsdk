@@ -22,8 +22,9 @@ object Example extends App {
   println(resp1)
 
 
-  val req2 = client.streaming.listCurrencies(QueryOptions().withTop(10))
-  val resp2 = req2.runForeach(x => println(x))
+  val req2 = client.streaming.listCurrencies(QueryOptions().withTop(5))
+  val resp2f = req2.runForeach(x => println(x))
+  val resp2 = Await.result(resp2f, 30.seconds)
   println(resp2)
 
 }

@@ -11,13 +11,13 @@ import HttpMethods._
 import akka.NotUsed
 import akka.http.scaladsl.model.headers
 import akka.http.scaladsl.model.headers.{BasicHttpCredentials, GenericHttpCredentials}
-import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.scaladsl.Source
-import play.api.libs.json._
-import json._
 import org.upstartcommerce.avataxsdk.core.data.{FetchResult, FilterAst, QueryOptions}
 import org.upstartcommerce.avataxsdk.core.data.models.{AuditEvent, CurrencyModel}
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
+import play.api.libs.json._
+import org.upstartcommerce.avataxsdk.client.json._
 
 trait AvataxClient {
   def batching: BatchingAvataxClient
@@ -40,16 +40,41 @@ object AvataxClient {
     val requester = Requester.pooled(poolFlow, 10)
     import system.dispatcher
 
+    /**
+      * Fetches one batch of data based on request
+      */
+    def batchFetch[A: Format](req: HttpRequest)(
+        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Future[FetchResult[A]] = {
+      val resp = requester.request(req)
+      resp.flatMap { x =>
+        Unmarshal(x).to[FetchResult[A]]
+      }
+    }
+
+    /**
+      * Pulls the data continously from source, following next link in resultset each time.
+      */
+    def continuousStream[A: Format](req: HttpRequest)(
+      implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Source[A, NotUsed] = {
+      Source
+        .unfoldAsync[Option[HttpRequest], List[A]](Some(req)) {
+        case Some(url) =>
+          batchFetch[A](url)
+            .map {
+              case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
+              case FetchResult(_, values, None)       => Some((None, values))
+            }
+        case None => Future.successful(None)
+      }
+        .flatMapConcat(xs => Source(xs))
+    }
+
     val batchingClient = new BatchingAvataxClient {
       def listCurrencies(options: QueryOptions): Future[FetchResult[CurrencyModel]] = {
         val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
         val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
         val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-
-        val resp = requester.request(req)
-        resp.flatMap { x =>
-          Unmarshal(x).to[FetchResult[CurrencyModel]]
-        }
+        batchFetch[CurrencyModel](req)
       }
     }
 
@@ -58,37 +83,13 @@ object AvataxClient {
         val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
         val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
         val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-
-        Source.unfoldAsync[Option[HttpRequest], List[CurrencyModel]](Some(req)) {
-          case Some(url) =>
-            requester
-              .request(url)
-              .flatMap { resp =>
-                Unmarshal(resp).to[FetchResult[CurrencyModel]]
-              }
-              .map {
-                case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
-                case FetchResult(_, values, None)       => Some((None, values))
-              }
-          case None => Future.successful(None)
-        }
-      }.flatMapConcat(xs => Source(xs))
+        continuousStream[CurrencyModel](req)
+      }
     }
 
     new AvataxClient {
       val batching: BatchingAvataxClient   = batchingClient
       val streaming: StreamingAvataxClient = streamingClient
-    }
-  }
-
-  implicit class QueryOptionsExt(private val q: QueryOptions) extends AnyVal {
-    def asQuery: Query = {
-      val params = q.filter.map(x => "$filter" -> FilterAst.serialize(x)).toList ++
-        q.top.map(x => "$top"         -> x.toString).toList ++
-        q.skip.map(x => "$skip"       -> x.toString).toList ++
-        q.orderBy.map(x => "$orderBy" -> x).toList
-
-      Query(params: _*)
     }
   }
 }
