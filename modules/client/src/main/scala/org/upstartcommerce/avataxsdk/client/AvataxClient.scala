@@ -1,5 +1,7 @@
 package org.upstartcommerce.avataxsdk.client
 
+import java.text.{DateFormat, SimpleDateFormat}
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
@@ -16,15 +18,24 @@ import akka.stream.scaladsl.Source
 import org.upstartcommerce.avataxsdk.core.data._
 import org.upstartcommerce.avataxsdk.core.data.models._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
-
 import org.upstartcommerce.avataxsdk.json._
 import play.api.libs.json._
 
+// todo: remove date for more usable one
 trait AvataxClient {
   def accountResetLicenseKey(id: Int,
                              model: ResetLicenseKeyModel): AvataxSimpleCall[LicenseKeyModel]
 
-  def listCurrencies(options: QueryOptions): AvataxCollectionCall[CurrencyModel]
+  def activateAccount(id: Int, model: ActivateAccountModel): AvataxSimpleCall[AccountModel]
+
+  def auditAccount(id:Int, start:Date, end:Date, options: BasicQueryOptions): AvataxCollectionCall[CurrencyModel]
+
+  def activateFundingRequest(id: Long): AvataxSimpleCall[FundingStatusModel]
+
+  //
+  def fundingRequestStatus(id: Long): AvataxSimpleCall[FundingStatusModel]
+
+  def listCurrencies(options: FiltrableQueryOptions): AvataxCollectionCall[CurrencyModel]
 }
 
 sealed trait AvataxCall[+A]
@@ -57,7 +68,12 @@ object AvataxClient {
 
     val poolFlow    = HostPool.forUrl("sandbox-rest.avatax.com")
     val requester   = Requester.pooled(poolFlow, 10)
+
     val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
+    val dateFmt  = {
+      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    }
+
     import system.dispatcher
 
     /**
@@ -117,7 +133,33 @@ object AvataxClient {
         avataxSimpleCall[LicenseKeyModel](req)
       }
 
-      def listCurrencies(options: QueryOptions): AvataxCollectionCall[CurrencyModel] = {
+      def activateAccount(id: Int, model: ActivateAccountModel): AvataxSimpleCall[AccountModel] = {
+        val uri = Uri(s"/api/v2/accounts/$id/activate")
+        val req = HttpRequest(uri = uri).withMethod(POST).withHeaders(credentials)
+        avataxSimpleCall[AccountModel](req)
+      }
+
+      def auditAccount(id:Int, start:Date, end:Date, options: BasicQueryOptions): AvataxCollectionCall[CurrencyModel] = {
+        val uri = Uri(s"/api/v2/accounts/$id/audit").withQuery(options.asQuery.and("start", dateFmt.format(start)).and("end", dateFmt.format(end)))
+        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
+        avataxCollectionCall[CurrencyModel](req)
+      }
+
+      //
+      def activateFundingRequest(id: Long): AvataxSimpleCall[FundingStatusModel] = {
+        val uri = Uri(s"/api/v2/fundingrequests/$id/widget")
+        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
+        avataxSimpleCall[FundingStatusModel](req)
+      }
+
+      def fundingRequestStatus(id: Long): AvataxSimpleCall[FundingStatusModel] = {
+        val uri = Uri(s"/api/v2/fundingrequests/$id")
+        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
+        avataxSimpleCall[FundingStatusModel](req)
+      }
+
+
+      def listCurrencies(options: FiltrableQueryOptions): AvataxCollectionCall[CurrencyModel] = {
         val uri = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
         val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
         avataxCollectionCall[CurrencyModel](req)
