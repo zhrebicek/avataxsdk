@@ -13,3 +13,8 @@ Add following to your build.sbt
 ```
 libraryDependencies += "TODO"
 ```
+
+### Compilation
+
+First compilation will take a long time (>10minutes) due to huge amount of data types available and following json format macros. Followup incremental compilations should be
+fast.

@@ -1,6 +1,5 @@
 package org.upstartcommerce.avataxsdk.client.json
 
-import org.upstartcommerce.avataxsdk.core.data.models.{AuditEvent, CurrencyModel}
 import org.upstartcommerce.avataxsdk.core.data.FetchResult
 import play.api.libs.json._
 import play.api.libs.functional.syntax._

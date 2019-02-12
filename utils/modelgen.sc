@@ -17,7 +17,11 @@ import java.nio.charset.StandardCharsets
 
 // point to location where AvaTax is checked out
 val dir = new File("/tmp/AvaTax-REST-V2-JRE-SDK/src/main/java/net/avalara/avatax/rest/client/models")
-val resultPath = "/tmp/models/"
+//val resultPath = "/tmp/models/"
+val resultPath = "/home/kadekm/Code/Upwork/external/avatax-client/modules/core/src/main/scala/org/upstartcommerce/avataxsdk/core/data/models"
+
+def upperCaseFirstLetter(s:String):String = Character.toUpperCase(s.charAt(0)) + s.substring(1)
+def lowerCaseFirstLetter(s:String):String = Character.toLowerCase(s.charAt(0)) + s.substring(1)
 
 def getListOfFiles(dir: File, extensions: List[String]): List[File] = {
     dir.listFiles.filter(_.isFile).toList.filter { file =>
@@ -32,17 +36,17 @@ def toScalaTpe(s:String):String = {
     .replaceAll("Integer", "Int")
 }
 
-final case class Member(fieldType:String, fieldName:String, defaultVal:Option[String] = None) {
-  def defVal = defaultVal.fold("")(x => s" = $x")
-
-  // put ticks behind reserved words
-  private def tickReserved(s:String):String = {
-    val res = Set("type")
-    res.fold(s) {
-      case (ss, r) if ss == r => ss.replaceAll(r, s"`$r`")
-      case (ss, _) => ss
-    }
+// put ticks behind reserved words
+def tickReserved(s:String):String = {
+  val res = Set("type")
+  res.fold(s) {
+    case (ss, r) if ss == r => ss.replaceAll(r, s"`$r`")
+    case (ss, _) => ss
   }
+}
+
+final case class Member(fieldType:String, fieldName:String, defaultVal:Option[String] = None, originalType:String) {
+  def defVal = defaultVal.fold("")(x => s" = $x")
 
   override def toString:String = s"${tickReserved(fieldName)}:$fieldType$defVal"
 }
@@ -58,7 +62,17 @@ def extractMembers(f:File):CaseClass = {
     .map(_.split("\\s+(?![^\\[]*\\])")) //private Integer id; also take care of spaces in generic types
     .filter(x => x.length == 3 && x.head == "private")
     .map(_.drop(1)) // modifier 'private'
-    .map(xs => Member(s"Option[${xs.head}]", xs.last, defaultVal = Some("None")))
+    .map{ xs =>
+      val tpe = xs.head
+      // do not put lists and maps into optional
+      val (tpe2, defaultVal, originalTpe) =
+        if (tpe.startsWith("List")) (tpe, "List.empty", tpe)
+        else if (tpe.startsWith("Map")) (tpe, "Map.empty", tpe)
+        else (s"Option[$tpe]", s"None", tpe)
+
+      val symbol = xs.last
+      Member(tpe2, fieldName = symbol, defaultVal = Some(defaultVal), originalType = originalTpe)
+    }
     .toList
 
   val ccName = f.getName.substring(0, f.getName.lastIndexOf('.'))
@@ -67,11 +81,19 @@ def extractMembers(f:File):CaseClass = {
 }
 
 def serialize(c:CaseClass):String = {
+  val withs = c.members.map { m =>
+    val wrapped = if (m.fieldType.startsWith("Option")) "Some(value)" else "value"
+    val upper = upperCaseFirstLetter(m.fieldName)
+      s"  def with$upper(value:${tickReserved(m.originalType)}):${c.name} = copy(${tickReserved(m.fieldName)} = $wrapped)"
+  }.mkString("\n")
+
     s"""|package org.upstartcommerce.avataxsdk.core.data.models
       |import java.sql.Date
       |import org.upstartcommerce.avataxsdk.core.data.enums._
       |
-      |final case class ${c.name}${c.members.mkString("(", ", ", ")")}
+      |final case class ${c.name}${c.members.mkString("(", ", ", ")")} {
+      |$withs
+      |}
   """.stripMargin
 }
 
@@ -88,4 +110,14 @@ ccs.foreach { x =>
     println(s"${x.name} exists, skipping")
   }
 }
+
+// play json format
+val jsStr = ccs.map { x =>
+    val (prefix, impl) = if (x.members.size > 22) ("/* over 22 fields */ ", "???") else ("", s"Json.format[${x.name}]")
+    val lower = lowerCaseFirstLetter(x.name)
+    s"${prefix}implicit val ${lower}OFormat: OFormat[${x.name}] = $impl"
+  }.mkString("\n")
+
+val jsonPath = s"$resultPath/play-format.txt"
+Files.write(Paths.get(jsonPath), jsStr.getBytes(StandardCharsets.UTF_8))
 
