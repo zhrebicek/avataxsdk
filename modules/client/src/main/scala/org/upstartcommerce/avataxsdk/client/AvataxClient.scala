@@ -20,16 +20,13 @@ import play.api.libs.json._
 import org.upstartcommerce.avataxsdk.client.json._
 
 trait AvataxClient {
-  def batching: BatchingAvataxClient
-  def streaming: StreamingAvataxClient
+  def listCurrencies(options: QueryOptions): AvataxCall[CurrencyModel]
 }
 
-trait BatchingAvataxClient {
-  def listCurrencies(options: QueryOptions): Future[FetchResult[CurrencyModel]]
-}
-
-trait StreamingAvataxClient {
-  def listCurrencies(options: QueryOptions): Source[CurrencyModel, NotUsed]
+sealed trait AvataxCall[A] {
+  def batch(): Future[FetchResult[A]]
+  final def apply(): Future[FetchResult[A]] = batch()
+  def stream: Source[A, NotUsed]
 }
 
 object AvataxClient {
@@ -55,41 +52,34 @@ object AvataxClient {
       * Pulls the data continously from source, following next link in resultset each time.
       */
     def continuousStream[A: Format](req: HttpRequest)(
-      implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Source[A, NotUsed] = {
+        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Source[A, NotUsed] = {
       Source
         .unfoldAsync[Option[HttpRequest], List[A]](Some(req)) {
-        case Some(url) =>
-          batchFetch[A](url)
-            .map {
-              case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
-              case FetchResult(_, values, None)       => Some((None, values))
-            }
-        case None => Future.successful(None)
-      }
+          case Some(url) =>
+            batchFetch[A](url)
+              .map {
+                case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
+                case FetchResult(_, values, None)       => Some((None, values))
+              }
+          case None => Future.successful(None)
+        }
         .flatMapConcat(xs => Source(xs))
     }
 
-    val batchingClient = new BatchingAvataxClient {
-      def listCurrencies(options: QueryOptions): Future[FetchResult[CurrencyModel]] = {
-        val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
-        val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
-        val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        batchFetch[CurrencyModel](req)
+    def avataxCall[A: Format](req: HttpRequest)(
+        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): AvataxCall[A] =
+      new AvataxCall[A] {
+        def batch(): Future[FetchResult[A]] = batchFetch[A](req)
+        def stream: Source[A, NotUsed]    = continuousStream[A](req)
       }
-    }
-
-    val streamingClient = new StreamingAvataxClient {
-      def listCurrencies(options: QueryOptions): Source[CurrencyModel, NotUsed] = {
-        val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
-        val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
-        val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        continuousStream[CurrencyModel](req)
-      }
-    }
 
     new AvataxClient {
-      val batching: BatchingAvataxClient   = batchingClient
-      val streaming: StreamingAvataxClient = streamingClient
+      def listCurrencies(options: QueryOptions): AvataxCall[CurrencyModel] = {
+        val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
+        val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
+        val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
+        avataxCall[CurrencyModel](req)
+      }
     }
   }
 }
