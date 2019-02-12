@@ -15,7 +15,7 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.scaladsl.Source
 import play.api.libs.json._
 import json._
-import org.upstartcommerce.avataxsdk.core.data.{FetchResult, QueryOptions}
+import org.upstartcommerce.avataxsdk.core.data.{FetchResult, FilterAst, QueryOptions}
 import org.upstartcommerce.avataxsdk.core.data.models.{AuditEvent, CurrencyModel}
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
 
@@ -83,7 +83,7 @@ object AvataxClient {
 
   implicit class QueryOptionsExt(private val q: QueryOptions) extends AnyVal {
     def asQuery: Query = {
-      val params: List[(String, String)] = q.filter.map(x => "$filter" -> x).toList ++
+      val params = q.filter.map(x => "$filter" -> FilterAst.serialize(x)).toList ++
         q.top.map(x => "$top"         -> x.toString).toList ++
         q.skip.map(x => "$skip"       -> x.toString).toList ++
         q.orderBy.map(x => "$orderBy" -> x).toList
