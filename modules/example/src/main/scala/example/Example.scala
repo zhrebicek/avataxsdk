@@ -17,9 +17,13 @@ object Example extends App {
   val auth = System.getenv("AVATAX_BASE64")
   val client = AvataxClient(auth)
 
-  val r = client.listCurrencies(QueryOptions().withTop(1))
-  val resp = Await.result(r, 30.seconds)
-  println(resp)
+  val req1 = client.batching.listCurrencies(QueryOptions().withTop(1))
+  val resp1 = Await.result(req1, 30.seconds)
+  println(resp1)
 
+
+  val req2 = client.streaming.listCurrencies(QueryOptions().withTop(10))
+  val resp2 = req2.runForeach(x => println(x))
+  println(resp2)
 
 }

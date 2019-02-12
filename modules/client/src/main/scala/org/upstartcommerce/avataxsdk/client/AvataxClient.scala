@@ -8,6 +8,7 @@ import org.upstartcommerce.avataxsdk.client.internal._
 
 import scala.concurrent.Future
 import HttpMethods._
+import akka.NotUsed
 import akka.http.scaladsl.model.headers
 import akka.http.scaladsl.model.headers.{BasicHttpCredentials, GenericHttpCredentials}
 import akka.http.scaladsl.unmarshalling.Unmarshal
@@ -19,7 +20,16 @@ import org.upstartcommerce.avataxsdk.core.data.models.{AuditEvent, CurrencyModel
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
 
 trait AvataxClient {
+  def batching: BatchingAvataxClient
+  def streaming: StreamingAvataxClient
+}
+
+trait BatchingAvataxClient {
   def listCurrencies(options: QueryOptions): Future[FetchResult[CurrencyModel]]
+}
+
+trait StreamingAvataxClient {
+  def listCurrencies(options: QueryOptions): Source[CurrencyModel, NotUsed]
 }
 
 object AvataxClient {
@@ -30,7 +40,7 @@ object AvataxClient {
     val requester = Requester.pooled(poolFlow, 10)
     import system.dispatcher
 
-    new AvataxClient {
+    val batchingClient = new BatchingAvataxClient {
       def listCurrencies(options: QueryOptions): Future[FetchResult[CurrencyModel]] = {
         val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
         val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
@@ -41,30 +51,34 @@ object AvataxClient {
           Unmarshal(x).to[FetchResult[CurrencyModel]]
         }
       }
+    }
 
-      /*
-      // TODO
-      def streamListCurrencies(options: QueryOptions): Source[CurrencyModel, Future[CurrencyModel]] = {
+    val streamingClient = new StreamingAvataxClient {
+      def listCurrencies(options: QueryOptions): Source[CurrencyModel, NotUsed] = {
         val uri         = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
         val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
         val req         = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
 
-        def loop[A](result:Source[FetchResult[A], _]):Source[FetchResult[A], _] = {
-          result.flatMapConcat {
-            case FetchResult(_, _, Some(next)) =>
-            case FetchResult(_, _, None) =>
-          }
+        Source.unfoldAsync[Option[HttpRequest], List[CurrencyModel]](Some(req)) {
+          case Some(url) =>
+            requester
+              .request(url)
+              .flatMap { resp =>
+                Unmarshal(resp).to[FetchResult[CurrencyModel]]
+              }
+              .map {
+                case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
+                case FetchResult(_, values, None)       => Some((None, values))
+              }
+          case None => Future.successful(None)
         }
-
-        Source.fromFuture(requester.request(req)).flatMapConcat {
-          resp =>
-            val unmarshalled = Unmarshal(resp).to[FetchResult[CurrencyModel]]
-            Source.fromFuture(unmarshalled)
-        }
-      }
-     */
+      }.flatMapConcat(xs => Source(xs))
     }
 
+    new AvataxClient {
+      val batching: BatchingAvataxClient   = batchingClient
+      val streaming: StreamingAvataxClient = streamingClient
+    }
   }
 
   implicit class QueryOptionsExt(private val q: QueryOptions) extends AnyVal {
