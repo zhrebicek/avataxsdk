@@ -26,6 +26,8 @@ lazy val scalatestV       = "3.0.5"
 lazy val akkaHttpV        = "10.1.7"
 lazy val akkaStreamV      = "2.5.20"
 lazy val playJsonV        = "2.7.1"
+// for case classes > 22 fields
+lazy val playJsonExtV     = "0.20.0"
 lazy val akkaHttpJsonV    = "1.24.3"
 lazy val shapelessV       = "2.3.3"
 
@@ -42,7 +44,7 @@ lazy val scalacSettings = Seq(
     "-language:implicitConversions",     // Allow definition of implicit functions called views
     "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
     "-Xcheckinit",                       // Wrap field accessors to throw an exception on uninitialized access.
-    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
+    //"-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
     "-Xfuture",                          // Turn on future language features.
     "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
     "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
@@ -92,6 +94,20 @@ lazy val core = project
     ),
   )
 
+lazy val jsonPlay = project
+  .in(file("modules/json-play"))
+  .settings(commonSettings)
+  .settings(
+    name := "avataxsdk-json-play",
+    libraryDependencies ++= Seq(
+      "com.typesafe.play" %% "play-json"                % playJsonV,
+      "ai.x"              %% "play-json-extensions"     % playJsonExtV,
+      "com.chuusai"       %% "shapeless"                % shapelessV,
+      "org.scalatest"     %% "scalatest"                % scalatestV % "test"
+    ),
+  )
+  .dependsOn(core)
+
 lazy val client = project
   .in(file("modules/client"))
   .settings(commonSettings)
@@ -100,13 +116,11 @@ lazy val client = project
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core"           % akkaHttpV,
       "com.typesafe.akka" %% "akka-stream"              % akkaStreamV,
-      "com.typesafe.play" %% "play-json"                % playJsonV,
       "de.heikoseeberger" %% "akka-http-play-json"      % akkaHttpJsonV,
-      "com.chuusai"       %% "shapeless"                % shapelessV,
       "org.scalatest"     %% "scalatest"                % scalatestV % "test"
     ),
   )
-  .dependsOn(core)
+  .dependsOn(core, jsonPlay)
 
 lazy val example =
   project

@@ -16,8 +16,9 @@ import akka.stream.scaladsl.Source
 import org.upstartcommerce.avataxsdk.core.data._
 import org.upstartcommerce.avataxsdk.core.data.models._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
+
+import org.upstartcommerce.avataxsdk.json._
 import play.api.libs.json._
-import org.upstartcommerce.avataxsdk.client.json._
 
 trait AvataxClient {
   def accountResetLicenseKey(id: Int,

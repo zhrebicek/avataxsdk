@@ -1,4 +1,5 @@
-package org.upstartcommerce.avataxsdk.client.json
+package org.upstartcommerce.avataxsdk.json
+
 import org.upstartcommerce.avataxsdk.core.data.models._
 import play.api.libs.json._
 
