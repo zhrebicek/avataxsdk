@@ -2,7 +2,9 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class ItemModel(id:Option[Long] = None, companyId:Option[Int] = None, itemCode:Option[String] = None, taxCodeId:Option[Int] = None, taxCode:Option[String] = None, description:Option[String] = None, itemGroup:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, classifications:List[ClassificationModel] = List.empty, parameters:List[ItemParameterModel] = List.empty) {
+final case class ItemModel(id:Option[Long] = None, companyId:Option[Int] = None, itemCode:Option[String] = None, taxCodeId:Option[Int] = None, taxCode:Option[String] = None, description:Option[String] = None, itemGroup:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, classifications:Option[List[ClassificationModel]] = None, parameters:Option[List[ItemParameterModel]] = None) {
+  lazy val classificationsRaw:List[ClassificationModel] = classifications.getOrElse(List.empty)
+  lazy val parametersRaw:List[ItemParameterModel] = parameters.getOrElse(List.empty)
   def withId(value:Long):ItemModel = copy(id = Some(value))
   def withCompanyId(value:Int):ItemModel = copy(companyId = Some(value))
   def withItemCode(value:String):ItemModel = copy(itemCode = Some(value))
@@ -14,7 +16,7 @@ final case class ItemModel(id:Option[Long] = None, companyId:Option[Int] = None,
   def withCreatedUserId(value:Int):ItemModel = copy(createdUserId = Some(value))
   def withModifiedDate(value:Date):ItemModel = copy(modifiedDate = Some(value))
   def withModifiedUserId(value:Int):ItemModel = copy(modifiedUserId = Some(value))
-  def withClassifications(value:List[ClassificationModel]):ItemModel = copy(classifications = value)
-  def withParameters(value:List[ItemParameterModel]):ItemModel = copy(parameters = value)
+  def withClassifications(value:List[ClassificationModel]):ItemModel = copy(classifications = Some(value))
+  def withParameters(value:List[ItemParameterModel]):ItemModel = copy(parameters = Some(value))
 }
   

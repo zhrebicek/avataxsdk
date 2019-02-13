@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class AuditEvent(auditEventId:Option[Long] = None, transactionId:Option[Long] = None, auditEventLevelId:Option[Int] = None, eventTimestamp:Option[Date] = None, source:Option[String] = None, summary:Option[String] = None, details:Option[String] = None) {
+
   def withAuditEventId(value:Long):AuditEvent = copy(auditEventId = Some(value))
   def withTransactionId(value:Long):AuditEvent = copy(transactionId = Some(value))
   def withAuditEventLevelId(value:Int):AuditEvent = copy(auditEventLevelId = Some(value))

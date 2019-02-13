@@ -2,7 +2,15 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class TransactionModel(id:Option[Long] = None, code:Option[String] = None, companyId:Option[Int] = None, date:Option[Date] = None, paymentDate:Option[Date] = None, status:Option[DocumentStatus] = None, `type`:Option[DocumentType] = None, batchCode:Option[String] = None, currencyCode:Option[String] = None, customerUsageType:Option[String] = None, entityUseCode:Option[String] = None, customerVendorCode:Option[String] = None, customerCode:Option[String] = None, exemptNo:Option[String] = None, reconciled:Option[Boolean] = None, locationCode:Option[String] = None, reportingLocationCode:Option[String] = None, purchaseOrderNo:Option[String] = None, referenceCode:Option[String] = None, salespersonCode:Option[String] = None, taxOverrideType:Option[TaxOverrideType] = None, taxOverrideAmount:Option[BigDecimal] = None, taxOverrideReason:Option[String] = None, totalAmount:Option[BigDecimal] = None, totalExempt:Option[BigDecimal] = None, totalDiscount:Option[BigDecimal] = None, totalTax:Option[BigDecimal] = None, totalTaxable:Option[BigDecimal] = None, totalTaxCalculated:Option[BigDecimal] = None, adjustmentReason:Option[AdjustmentReason] = None, adjustmentDescription:Option[String] = None, locked:Option[Boolean] = None, region:Option[String] = None, country:Option[String] = None, version:Option[Int] = None, softwareVersion:Option[String] = None, originAddressId:Option[Long] = None, destinationAddressId:Option[Long] = None, exchangeRateEffectiveDate:Option[Date] = None, exchangeRate:Option[BigDecimal] = None, isSellerImporterOfRecord:Option[Boolean] = None, description:Option[String] = None, email:Option[String] = None, businessIdentificationNo:Option[String] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, taxDate:Option[Date] = None, lines:List[TransactionLineModel] = List.empty, addresses:List[TransactionAddressModel] = List.empty, locationTypes:List[TransactionLocationTypeModel] = List.empty, summary:List[TransactionSummary] = List.empty, taxDetailsByTaxType:List[TaxDetailsByTaxType] = List.empty, parameters:Map[String, String] = Map.empty, messages:List[AvaTaxMessage] = List.empty, invoiceMessages:List[InvoiceMessageModel] = List.empty) {
+final case class TransactionModel(id:Option[Long] = None, code:Option[String] = None, companyId:Option[Int] = None, date:Option[Date] = None, paymentDate:Option[Date] = None, status:Option[DocumentStatus] = None, `type`:Option[DocumentType] = None, batchCode:Option[String] = None, currencyCode:Option[String] = None, customerUsageType:Option[String] = None, entityUseCode:Option[String] = None, customerVendorCode:Option[String] = None, customerCode:Option[String] = None, exemptNo:Option[String] = None, reconciled:Option[Boolean] = None, locationCode:Option[String] = None, reportingLocationCode:Option[String] = None, purchaseOrderNo:Option[String] = None, referenceCode:Option[String] = None, salespersonCode:Option[String] = None, taxOverrideType:Option[TaxOverrideType] = None, taxOverrideAmount:Option[BigDecimal] = None, taxOverrideReason:Option[String] = None, totalAmount:Option[BigDecimal] = None, totalExempt:Option[BigDecimal] = None, totalDiscount:Option[BigDecimal] = None, totalTax:Option[BigDecimal] = None, totalTaxable:Option[BigDecimal] = None, totalTaxCalculated:Option[BigDecimal] = None, adjustmentReason:Option[AdjustmentReason] = None, adjustmentDescription:Option[String] = None, locked:Option[Boolean] = None, region:Option[String] = None, country:Option[String] = None, version:Option[Int] = None, softwareVersion:Option[String] = None, originAddressId:Option[Long] = None, destinationAddressId:Option[Long] = None, exchangeRateEffectiveDate:Option[Date] = None, exchangeRate:Option[BigDecimal] = None, isSellerImporterOfRecord:Option[Boolean] = None, description:Option[String] = None, email:Option[String] = None, businessIdentificationNo:Option[String] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, taxDate:Option[Date] = None, lines:Option[List[TransactionLineModel]] = None, addresses:Option[List[TransactionAddressModel]] = None, locationTypes:Option[List[TransactionLocationTypeModel]] = None, summary:Option[List[TransactionSummary]] = None, taxDetailsByTaxType:Option[List[TaxDetailsByTaxType]] = None, parameters:Option[Map[String, String]] = None, messages:Option[List[AvaTaxMessage]] = None, invoiceMessages:Option[List[InvoiceMessageModel]] = None) {
+  lazy val linesRaw:List[TransactionLineModel] = lines.getOrElse(List.empty)
+  lazy val addressesRaw:List[TransactionAddressModel] = addresses.getOrElse(List.empty)
+  lazy val locationTypesRaw:List[TransactionLocationTypeModel] = locationTypes.getOrElse(List.empty)
+  lazy val summaryRaw:List[TransactionSummary] = summary.getOrElse(List.empty)
+  lazy val taxDetailsByTaxTypeRaw:List[TaxDetailsByTaxType] = taxDetailsByTaxType.getOrElse(List.empty)
+  lazy val parametersRaw:Map[String, String] = parameters.getOrElse(Map.empty)
+  lazy val messagesRaw:List[AvaTaxMessage] = messages.getOrElse(List.empty)
+  lazy val invoiceMessagesRaw:List[InvoiceMessageModel] = invoiceMessages.getOrElse(List.empty)
   def withId(value:Long):TransactionModel = copy(id = Some(value))
   def withCode(value:String):TransactionModel = copy(code = Some(value))
   def withCompanyId(value:Int):TransactionModel = copy(companyId = Some(value))
@@ -50,13 +58,13 @@ final case class TransactionModel(id:Option[Long] = None, code:Option[String] = 
   def withModifiedDate(value:Date):TransactionModel = copy(modifiedDate = Some(value))
   def withModifiedUserId(value:Int):TransactionModel = copy(modifiedUserId = Some(value))
   def withTaxDate(value:Date):TransactionModel = copy(taxDate = Some(value))
-  def withLines(value:List[TransactionLineModel]):TransactionModel = copy(lines = value)
-  def withAddresses(value:List[TransactionAddressModel]):TransactionModel = copy(addresses = value)
-  def withLocationTypes(value:List[TransactionLocationTypeModel]):TransactionModel = copy(locationTypes = value)
-  def withSummary(value:List[TransactionSummary]):TransactionModel = copy(summary = value)
-  def withTaxDetailsByTaxType(value:List[TaxDetailsByTaxType]):TransactionModel = copy(taxDetailsByTaxType = value)
-  def withParameters(value:Map[String, String]):TransactionModel = copy(parameters = value)
-  def withMessages(value:List[AvaTaxMessage]):TransactionModel = copy(messages = value)
-  def withInvoiceMessages(value:List[InvoiceMessageModel]):TransactionModel = copy(invoiceMessages = value)
+  def withLines(value:List[TransactionLineModel]):TransactionModel = copy(lines = Some(value))
+  def withAddresses(value:List[TransactionAddressModel]):TransactionModel = copy(addresses = Some(value))
+  def withLocationTypes(value:List[TransactionLocationTypeModel]):TransactionModel = copy(locationTypes = Some(value))
+  def withSummary(value:List[TransactionSummary]):TransactionModel = copy(summary = Some(value))
+  def withTaxDetailsByTaxType(value:List[TaxDetailsByTaxType]):TransactionModel = copy(taxDetailsByTaxType = Some(value))
+  def withParameters(value:Map[String, String]):TransactionModel = copy(parameters = Some(value))
+  def withMessages(value:List[AvaTaxMessage]):TransactionModel = copy(messages = Some(value))
+  def withInvoiceMessages(value:List[InvoiceMessageModel]):TransactionModel = copy(invoiceMessages = Some(value))
 }
   

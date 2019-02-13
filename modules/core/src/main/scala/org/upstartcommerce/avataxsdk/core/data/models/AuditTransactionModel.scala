@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class AuditTransactionModel(companyId:Option[Int] = None, reconstructed:Option[ReconstructedApiRequestResponseModel] = None, serverTimestamp:Option[Date] = None, serverDuration:Option[Date] = None, apiCallStatus:Option[ApiCallStatus] = None, original:Option[OriginalApiRequestResponseModel] = None) {
+
   def withCompanyId(value:Int):AuditTransactionModel = copy(companyId = Some(value))
   def withReconstructed(value:ReconstructedApiRequestResponseModel):AuditTransactionModel = copy(reconstructed = Some(value))
   def withServerTimestamp(value:Date):AuditTransactionModel = copy(serverTimestamp = Some(value))

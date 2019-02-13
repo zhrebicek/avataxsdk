@@ -2,9 +2,11 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class CreateMultiCompanyTransactionModel(code:Option[String] = None, lines:List[MultiCompanyLineItemModel] = List.empty, `type`:Option[DocumentType] = None, companyCode:Option[String] = None, date:Option[Date] = None, salespersonCode:Option[String] = None, customerCode:Option[String] = None, customerUsageType:Option[String] = None, discount:Option[BigDecimal] = None, purchaseOrderNo:Option[String] = None, exemptionNo:Option[String] = None, addresses:Option[AddressesModel] = None, parameters:Map[String, String] = Map.empty, referenceCode:Option[String] = None, reportingLocationCode:Option[String] = None, commit:Option[Boolean] = None, batchCode:Option[String] = None, taxOverride:Option[TaxOverrideModel] = None, currencyCode:Option[String] = None, serviceMode:Option[ServiceMode] = None, exchangeRate:Option[BigDecimal] = None, exchangeRateEffectiveDate:Option[Date] = None, posLaneCode:Option[String] = None, businessIdentificationNo:Option[String] = None, isSellerImporterOfRecord:Option[Boolean] = None, description:Option[String] = None, email:Option[String] = None, debugLevel:Option[TaxDebugLevel] = None) {
+final case class CreateMultiCompanyTransactionModel(code:Option[String] = None, lines:Option[List[MultiCompanyLineItemModel]] = None, `type`:Option[DocumentType] = None, companyCode:Option[String] = None, date:Option[Date] = None, salespersonCode:Option[String] = None, customerCode:Option[String] = None, customerUsageType:Option[String] = None, discount:Option[BigDecimal] = None, purchaseOrderNo:Option[String] = None, exemptionNo:Option[String] = None, addresses:Option[AddressesModel] = None, parameters:Option[Map[String, String]] = None, referenceCode:Option[String] = None, reportingLocationCode:Option[String] = None, commit:Option[Boolean] = None, batchCode:Option[String] = None, taxOverride:Option[TaxOverrideModel] = None, currencyCode:Option[String] = None, serviceMode:Option[ServiceMode] = None, exchangeRate:Option[BigDecimal] = None, exchangeRateEffectiveDate:Option[Date] = None, posLaneCode:Option[String] = None, businessIdentificationNo:Option[String] = None, isSellerImporterOfRecord:Option[Boolean] = None, description:Option[String] = None, email:Option[String] = None, debugLevel:Option[TaxDebugLevel] = None) {
+  lazy val linesRaw:List[MultiCompanyLineItemModel] = lines.getOrElse(List.empty)
+  lazy val parametersRaw:Map[String, String] = parameters.getOrElse(Map.empty)
   def withCode(value:String):CreateMultiCompanyTransactionModel = copy(code = Some(value))
-  def withLines(value:List[MultiCompanyLineItemModel]):CreateMultiCompanyTransactionModel = copy(lines = value)
+  def withLines(value:List[MultiCompanyLineItemModel]):CreateMultiCompanyTransactionModel = copy(lines = Some(value))
   def withType(value:DocumentType):CreateMultiCompanyTransactionModel = copy(`type` = Some(value))
   def withCompanyCode(value:String):CreateMultiCompanyTransactionModel = copy(companyCode = Some(value))
   def withDate(value:Date):CreateMultiCompanyTransactionModel = copy(date = Some(value))
@@ -15,7 +17,7 @@ final case class CreateMultiCompanyTransactionModel(code:Option[String] = None, 
   def withPurchaseOrderNo(value:String):CreateMultiCompanyTransactionModel = copy(purchaseOrderNo = Some(value))
   def withExemptionNo(value:String):CreateMultiCompanyTransactionModel = copy(exemptionNo = Some(value))
   def withAddresses(value:AddressesModel):CreateMultiCompanyTransactionModel = copy(addresses = Some(value))
-  def withParameters(value:Map[String, String]):CreateMultiCompanyTransactionModel = copy(parameters = value)
+  def withParameters(value:Map[String, String]):CreateMultiCompanyTransactionModel = copy(parameters = Some(value))
   def withReferenceCode(value:String):CreateMultiCompanyTransactionModel = copy(referenceCode = Some(value))
   def withReportingLocationCode(value:String):CreateMultiCompanyTransactionModel = copy(reportingLocationCode = Some(value))
   def withCommit(value:Boolean):CreateMultiCompanyTransactionModel = copy(commit = Some(value))

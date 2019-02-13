@@ -2,7 +2,11 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class CustomerModel(id:Option[Int] = None, companyId:Option[Int] = None, customerCode:Option[String] = None, alternateId:Option[String] = None, name:Option[String] = None, attnName:Option[String] = None, line1:Option[String] = None, line2:Option[String] = None, city:Option[String] = None, postalCode:Option[String] = None, phoneNumber:Option[String] = None, faxNumber:Option[String] = None, emailAddress:Option[String] = None, contactName:Option[String] = None, lastTransaction:Option[Date] = None, createdDate:Option[Date] = None, modifiedDate:Option[Date] = None, country:Option[String] = None, region:Option[String] = None, isBill:Option[Boolean] = None, isShip:Option[Boolean] = None, taxpayerIdNumber:Option[String] = None, certificates:List[CertificateModel] = List.empty, customFields:List[CustomFieldModel] = List.empty, exposureZones:List[ExposureZoneModel] = List.empty, shipTos:List[CustomerModel] = List.empty) {
+final case class CustomerModel(id:Option[Int] = None, companyId:Option[Int] = None, customerCode:Option[String] = None, alternateId:Option[String] = None, name:Option[String] = None, attnName:Option[String] = None, line1:Option[String] = None, line2:Option[String] = None, city:Option[String] = None, postalCode:Option[String] = None, phoneNumber:Option[String] = None, faxNumber:Option[String] = None, emailAddress:Option[String] = None, contactName:Option[String] = None, lastTransaction:Option[Date] = None, createdDate:Option[Date] = None, modifiedDate:Option[Date] = None, country:Option[String] = None, region:Option[String] = None, isBill:Option[Boolean] = None, isShip:Option[Boolean] = None, taxpayerIdNumber:Option[String] = None, certificates:Option[List[CertificateModel]] = None, customFields:Option[List[CustomFieldModel]] = None, exposureZones:Option[List[ExposureZoneModel]] = None, shipTos:Option[List[CustomerModel]] = None) {
+  lazy val certificatesRaw:List[CertificateModel] = certificates.getOrElse(List.empty)
+  lazy val customFieldsRaw:List[CustomFieldModel] = customFields.getOrElse(List.empty)
+  lazy val exposureZonesRaw:List[ExposureZoneModel] = exposureZones.getOrElse(List.empty)
+  lazy val shipTosRaw:List[CustomerModel] = shipTos.getOrElse(List.empty)
   def withId(value:Int):CustomerModel = copy(id = Some(value))
   def withCompanyId(value:Int):CustomerModel = copy(companyId = Some(value))
   def withCustomerCode(value:String):CustomerModel = copy(customerCode = Some(value))
@@ -25,9 +29,9 @@ final case class CustomerModel(id:Option[Int] = None, companyId:Option[Int] = No
   def withIsBill(value:Boolean):CustomerModel = copy(isBill = Some(value))
   def withIsShip(value:Boolean):CustomerModel = copy(isShip = Some(value))
   def withTaxpayerIdNumber(value:String):CustomerModel = copy(taxpayerIdNumber = Some(value))
-  def withCertificates(value:List[CertificateModel]):CustomerModel = copy(certificates = value)
-  def withCustomFields(value:List[CustomFieldModel]):CustomerModel = copy(customFields = value)
-  def withExposureZones(value:List[ExposureZoneModel]):CustomerModel = copy(exposureZones = value)
-  def withShipTos(value:List[CustomerModel]):CustomerModel = copy(shipTos = value)
+  def withCertificates(value:List[CertificateModel]):CustomerModel = copy(certificates = Some(value))
+  def withCustomFields(value:List[CustomFieldModel]):CustomerModel = copy(customFields = Some(value))
+  def withExposureZones(value:List[ExposureZoneModel]):CustomerModel = copy(exposureZones = Some(value))
+  def withShipTos(value:List[CustomerModel]):CustomerModel = copy(shipTos = Some(value))
 }
   

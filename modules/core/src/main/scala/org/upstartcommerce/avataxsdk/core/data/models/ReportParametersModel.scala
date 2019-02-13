@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class ReportParametersModel(startDate:Option[Date] = None, endDate:Option[Date] = None, country:Option[String] = None, state:Option[String] = None, dateFilter:Option[String] = None, docType:Option[String] = None, dateFormat:Option[String] = None, culture:Option[String] = None, currencyCode:Option[String] = None) {
+
   def withStartDate(value:Date):ReportParametersModel = copy(startDate = Some(value))
   def withEndDate(value:Date):ReportParametersModel = copy(endDate = Some(value))
   def withCountry(value:String):ReportParametersModel = copy(country = Some(value))

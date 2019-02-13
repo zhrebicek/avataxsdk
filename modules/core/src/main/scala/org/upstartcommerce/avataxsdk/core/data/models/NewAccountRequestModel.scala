@@ -2,7 +2,9 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class NewAccountRequestModel(offer:Option[String] = None, connectorId:Option[String] = None, campaign:Option[String] = None, leadSource:Option[String] = None, effectiveDate:Option[Date] = None, endDate:Option[Date] = None, accountName:Option[String] = None, website:Option[String] = None, paymentMethodId:Option[String] = None, firstName:Option[String] = None, lastName:Option[String] = None, title:Option[String] = None, phoneNumber:Option[String] = None, email:Option[String] = None, userPassword:Option[String] = None, welcomeEmail:Option[WelcomeEmail] = None, companyAddress:Option[CompanyAddress] = None, companyCode:Option[String] = None, properties:List[String] = List.empty, acceptAvalaraTermsAndConditions:Option[Boolean] = None, haveReadAvalaraTermsAndConditions:Option[Boolean] = None, marketingContext:Map[String, String] = Map.empty) {
+final case class NewAccountRequestModel(offer:Option[String] = None, connectorId:Option[String] = None, campaign:Option[String] = None, leadSource:Option[String] = None, effectiveDate:Option[Date] = None, endDate:Option[Date] = None, accountName:Option[String] = None, website:Option[String] = None, paymentMethodId:Option[String] = None, firstName:Option[String] = None, lastName:Option[String] = None, title:Option[String] = None, phoneNumber:Option[String] = None, email:Option[String] = None, userPassword:Option[String] = None, welcomeEmail:Option[WelcomeEmail] = None, companyAddress:Option[CompanyAddress] = None, companyCode:Option[String] = None, properties:Option[List[String]] = None, acceptAvalaraTermsAndConditions:Option[Boolean] = None, haveReadAvalaraTermsAndConditions:Option[Boolean] = None, marketingContext:Option[Map[String, String]] = None) {
+  lazy val propertiesRaw:List[String] = properties.getOrElse(List.empty)
+  lazy val marketingContextRaw:Map[String, String] = marketingContext.getOrElse(Map.empty)
   def withOffer(value:String):NewAccountRequestModel = copy(offer = Some(value))
   def withConnectorId(value:String):NewAccountRequestModel = copy(connectorId = Some(value))
   def withCampaign(value:String):NewAccountRequestModel = copy(campaign = Some(value))
@@ -21,9 +23,9 @@ final case class NewAccountRequestModel(offer:Option[String] = None, connectorId
   def withWelcomeEmail(value:WelcomeEmail):NewAccountRequestModel = copy(welcomeEmail = Some(value))
   def withCompanyAddress(value:CompanyAddress):NewAccountRequestModel = copy(companyAddress = Some(value))
   def withCompanyCode(value:String):NewAccountRequestModel = copy(companyCode = Some(value))
-  def withProperties(value:List[String]):NewAccountRequestModel = copy(properties = value)
+  def withProperties(value:List[String]):NewAccountRequestModel = copy(properties = Some(value))
   def withAcceptAvalaraTermsAndConditions(value:Boolean):NewAccountRequestModel = copy(acceptAvalaraTermsAndConditions = Some(value))
   def withHaveReadAvalaraTermsAndConditions(value:Boolean):NewAccountRequestModel = copy(haveReadAvalaraTermsAndConditions = Some(value))
-  def withMarketingContext(value:Map[String, String]):NewAccountRequestModel = copy(marketingContext = value)
+  def withMarketingContext(value:Map[String, String]):NewAccountRequestModel = copy(marketingContext = Some(value))
 }
   

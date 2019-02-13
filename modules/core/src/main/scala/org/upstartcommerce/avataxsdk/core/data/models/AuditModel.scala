@@ -2,7 +2,9 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class AuditModel(transactionId:Option[Long] = None, accountId:Option[Int] = None, userId:Option[Int] = None, ipAddress:Option[String] = None, machineName:Option[String] = None, clientName:Option[String] = None, clientVersion:Option[String] = None, adapterName:Option[String] = None, adapterVersion:Option[String] = None, serverName:Option[String] = None, serverVersion:Option[String] = None, referenceId:Option[Long] = None, severityLevelId:Option[Int] = None, serverTimestamp:Option[Date] = None, serverDuration:Option[Int] = None, serviceName:Option[String] = None, operation:Option[String] = None, referenceCode:Option[String] = None, errorMessage:Option[String] = None, auditMessage:Option[String] = None, loadBalancerDuration:Option[Int] = None, recordCount:Option[Int] = None, referenceAuthorization:Option[String] = None, isQueued:Option[Boolean] = None, databaseCallCount:Option[Int] = None, databaseCallDuration:Option[String] = None, remoteCallDuration:Option[String] = None, events:List[AuditEvent] = List.empty, requestUrl:Option[String] = None, requestBody:Option[String] = None, responseStatus:Option[Int] = None, responseBody:Option[String] = None, remoteCalls:List[AuditModel] = List.empty) {
+final case class AuditModel(transactionId:Option[Long] = None, accountId:Option[Int] = None, userId:Option[Int] = None, ipAddress:Option[String] = None, machineName:Option[String] = None, clientName:Option[String] = None, clientVersion:Option[String] = None, adapterName:Option[String] = None, adapterVersion:Option[String] = None, serverName:Option[String] = None, serverVersion:Option[String] = None, referenceId:Option[Long] = None, severityLevelId:Option[Int] = None, serverTimestamp:Option[Date] = None, serverDuration:Option[Int] = None, serviceName:Option[String] = None, operation:Option[String] = None, referenceCode:Option[String] = None, errorMessage:Option[String] = None, auditMessage:Option[String] = None, loadBalancerDuration:Option[Int] = None, recordCount:Option[Int] = None, referenceAuthorization:Option[String] = None, isQueued:Option[Boolean] = None, databaseCallCount:Option[Int] = None, databaseCallDuration:Option[String] = None, remoteCallDuration:Option[String] = None, events:Option[List[AuditEvent]] = None, requestUrl:Option[String] = None, requestBody:Option[String] = None, responseStatus:Option[Int] = None, responseBody:Option[String] = None, remoteCalls:Option[List[AuditModel]] = None) {
+  lazy val eventsRaw:List[AuditEvent] = events.getOrElse(List.empty)
+  lazy val remoteCallsRaw:List[AuditModel] = remoteCalls.getOrElse(List.empty)
   def withTransactionId(value:Long):AuditModel = copy(transactionId = Some(value))
   def withAccountId(value:Int):AuditModel = copy(accountId = Some(value))
   def withUserId(value:Int):AuditModel = copy(userId = Some(value))
@@ -30,11 +32,11 @@ final case class AuditModel(transactionId:Option[Long] = None, accountId:Option[
   def withDatabaseCallCount(value:Int):AuditModel = copy(databaseCallCount = Some(value))
   def withDatabaseCallDuration(value:String):AuditModel = copy(databaseCallDuration = Some(value))
   def withRemoteCallDuration(value:String):AuditModel = copy(remoteCallDuration = Some(value))
-  def withEvents(value:List[AuditEvent]):AuditModel = copy(events = value)
+  def withEvents(value:List[AuditEvent]):AuditModel = copy(events = Some(value))
   def withRequestUrl(value:String):AuditModel = copy(requestUrl = Some(value))
   def withRequestBody(value:String):AuditModel = copy(requestBody = Some(value))
   def withResponseStatus(value:Int):AuditModel = copy(responseStatus = Some(value))
   def withResponseBody(value:String):AuditModel = copy(responseBody = Some(value))
-  def withRemoteCalls(value:List[AuditModel]):AuditModel = copy(remoteCalls = value)
+  def withRemoteCalls(value:List[AuditModel]):AuditModel = copy(remoteCalls = Some(value))
 }
   

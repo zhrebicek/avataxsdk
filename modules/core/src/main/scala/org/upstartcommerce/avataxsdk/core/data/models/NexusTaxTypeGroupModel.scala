@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class NexusTaxTypeGroupModel(id:Option[Int] = None, nexusTaxTypeGroupId:Option[String] = None, description:Option[String] = None, subscriptionTypeId:Option[Int] = None, subscriptionDescription:Option[String] = None, tabName:Option[String] = None, showColumn:Option[Boolean] = None) {
+
   def withId(value:Int):NexusTaxTypeGroupModel = copy(id = Some(value))
   def withNexusTaxTypeGroupId(value:String):NexusTaxTypeGroupModel = copy(nexusTaxTypeGroupId = Some(value))
   def withDescription(value:String):NexusTaxTypeGroupModel = copy(description = Some(value))

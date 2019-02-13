@@ -64,11 +64,11 @@ def extractMembers(f:File):CaseClass = {
     .map(_.drop(1)) // modifier 'private'
     .map{ xs =>
       val tpe = xs.head
-      // do not put lists and maps into optional
-      val (tpe2, defaultVal, originalTpe) =
-        if (tpe.startsWith("List")) (tpe, "List.empty", tpe)
+      val (tpe2, defaultVal, originalTpe) = (s"Option[$tpe]", s"None", tpe)
+    // do not put lists and maps into optional
+/*        if (tpe.startsWith("List")) (tpe, "List.empty", tpe)
         else if (tpe.startsWith("Map")) (tpe, "Map.empty", tpe)
-        else (s"Option[$tpe]", s"None", tpe)
+        else (s"Option[$tpe]", s"None", tpe)*/
 
       val symbol = xs.last
       Member(tpe2, fieldName = symbol, defaultVal = Some(defaultVal), originalType = originalTpe)
@@ -87,11 +87,18 @@ def serialize(c:CaseClass):String = {
       s"  def with$upper(value:${tickReserved(m.originalType)}):${c.name} = copy(${tickReserved(m.fieldName)} = $wrapped)"
   }.mkString("\n")
 
+  val accessors = c.members.map { m =>
+    if (m.originalType.startsWith("List")) Some(s"  lazy val ${m.fieldName}Raw:${m.originalType} = ${m.fieldName}.getOrElse(List.empty)")
+    else if (m.originalType.startsWith("Map")) Some(s"  lazy val ${m.fieldName}Raw:${m.originalType} = ${m.fieldName}.getOrElse(Map.empty)")
+    else None
+  }.collect { case Some(x) => x }.mkString("\n")
+
     s"""|package org.upstartcommerce.avataxsdk.core.data.models
       |import java.sql.Date
       |import org.upstartcommerce.avataxsdk.core.data.enums._
       |
       |final case class ${c.name}${c.members.mkString("(", ", ", ")")} {
+      |$accessors
       |$withs
       |}
   """.stripMargin

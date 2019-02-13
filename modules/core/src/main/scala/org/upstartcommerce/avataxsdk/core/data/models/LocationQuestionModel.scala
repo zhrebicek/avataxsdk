@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class LocationQuestionModel(id:Option[Int] = None, question:Option[String] = None, description:Option[String] = None, regularExpression:Option[String] = None, exampleValue:Option[String] = None, jurisdictionName:Option[String] = None, jurisdictionType:Option[JurisdictionType] = None, jurisdictionCountry:Option[String] = None, jurisdictionRegion:Option[String] = None) {
+
   def withId(value:Int):LocationQuestionModel = copy(id = Some(value))
   def withQuestion(value:String):LocationQuestionModel = copy(question = Some(value))
   def withDescription(value:String):LocationQuestionModel = copy(description = Some(value))

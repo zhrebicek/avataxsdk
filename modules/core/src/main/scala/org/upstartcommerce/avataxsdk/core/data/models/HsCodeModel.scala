@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class HsCodeModel(hsCode:Option[String] = None, id:Option[Long] = None, parentHsCodeId:Option[Long] = None, description:Option[String] = None, system:Option[String] = None, destinationCountry:Option[String] = None, effDate:Option[Date] = None, endDate:Option[Date] = None) {
+
   def withHsCode(value:String):HsCodeModel = copy(hsCode = Some(value))
   def withId(value:Long):HsCodeModel = copy(id = Some(value))
   def withParentHsCodeId(value:Long):HsCodeModel = copy(parentHsCodeId = Some(value))

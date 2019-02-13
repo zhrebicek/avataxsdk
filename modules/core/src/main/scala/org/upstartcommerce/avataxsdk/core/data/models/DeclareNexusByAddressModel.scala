@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class DeclareNexusByAddressModel(effectiveDate:Option[Date] = None, endDate:Option[Date] = None, textCase:Option[TextCase] = None, line1:Option[String] = None, line2:Option[String] = None, line3:Option[String] = None, city:Option[String] = None, region:Option[String] = None, country:Option[String] = None, postalCode:Option[String] = None, latitude:Option[BigDecimal] = None, longitude:Option[BigDecimal] = None) {
+
   def withEffectiveDate(value:Date):DeclareNexusByAddressModel = copy(effectiveDate = Some(value))
   def withEndDate(value:Date):DeclareNexusByAddressModel = copy(endDate = Some(value))
   def withTextCase(value:TextCase):DeclareNexusByAddressModel = copy(textCase = Some(value))

@@ -22,12 +22,9 @@ object Example extends App {
   val auth = System.getenv("AVATAX_BASE64")
   val client = AvataxClient(auth)
 
-/*
-
   val req1 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(1)).batch()
   val resp1 = Await.result(req1, 30.seconds)
   println(resp1)
-
 
   val req2 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50)).stream
   val resp2f = req2.runForeach(x => println(x))
@@ -41,7 +38,6 @@ object Example extends App {
   val req4 = client.accounts.forAccount(2000347130).getConfiguration.apply()
   val resp4 = Await.result(req4, 30.seconds)
   println(resp4)
-*/
 
   val req5 = client.accounts.query(Include(), FiltrableQueryOptions()).apply()
   val resp5 = Await.result(req5, 30.seconds)

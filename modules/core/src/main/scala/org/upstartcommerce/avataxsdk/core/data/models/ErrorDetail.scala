@@ -3,6 +3,7 @@ import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class ErrorDetail(code:Option[ErrorCodeId] = None, number:Option[Int] = None, message:Option[String] = None, description:Option[String] = None, faultCode:Option[String] = None, helpLink:Option[String] = None, refersTo:Option[String] = None, severity:Option[SeverityLevel] = None) {
+
   def withCode(value:ErrorCodeId):ErrorDetail = copy(code = Some(value))
   def withNumber(value:Int):ErrorDetail = copy(number = Some(value))
   def withMessage(value:String):ErrorDetail = copy(message = Some(value))
