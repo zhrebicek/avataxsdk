@@ -1,11 +1,15 @@
-package org.upstartcommerce.avataxsdk.client.api
+package org.upstartcommerce.avataxsdk.client
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import org.upstartcommerce.avataxsdk.core.data.FetchResult
+import org.upstartcommerce.avataxsdk.core.data.{AvataxException, FetchResult}
+
 import scala.concurrent.Future
 
-trait AvataxCall[+A]
+// todo: provide some combinators
+trait AvataxCall[+A] {
+  //def attempt:AvataxCall[Either[AvataxException, A]]
+}
 
 /**
   * Simple calls are ones that return pure model, and have no possibility of pagination, offset...,

@@ -1,35 +1,30 @@
 package org.upstartcommerce.avataxsdk.client.api
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
-import org.upstartcommerce.avataxsdk.client.internal.Requester
-import java.text.{DateFormat, SimpleDateFormat}
+import java.text.SimpleDateFormat
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model.Uri.Query
-import akka.http.scaladsl.model._
-import akka.stream.ActorMaterializer
-import org.upstartcommerce.avataxsdk.client.internal._
-
-import scala.concurrent.Future
-import HttpMethods._
 import akka.NotUsed
-import akka.http.scaladsl.model.headers
-import akka.http.scaladsl.model.headers._
-import akka.http.scaladsl.unmarshalling._
+import akka.actor.ActorSystem
 import akka.http.scaladsl.marshalling._
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.{Authorization, GenericHttpCredentials}
+import akka.http.scaladsl.unmarshalling._
+import akka.stream.Materializer
 import akka.stream.scaladsl.Source
-import org.upstartcommerce.avataxsdk.core.data._
-import org.upstartcommerce.avataxsdk.core.data.models._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
-import org.upstartcommerce.avataxsdk.client.api.DefinitionsApi
-import org.upstartcommerce.avataxsdk.core.data.enums._
+import org.upstartcommerce.avataxsdk.client.internal.Requester
+import org.upstartcommerce.avataxsdk.client.{AvataxCollectionCall, AvataxSimpleCall}
+import org.upstartcommerce.avataxsdk.core.data._
 import org.upstartcommerce.avataxsdk.json._
 import play.api.libs.json._
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
+import org.upstartcommerce.avataxsdk.core.data.models._
 
-abstract class ApiRoot(requester: Requester, credentialsHeader: HttpHeader)(implicit system: ActorSystem, materializer: Materializer) {
+import scala.concurrent.Future
+
+abstract class ApiRoot(requester: Requester, security: Option[Authorization])(implicit system: ActorSystem, materializer: Materializer) {
   val dateFmt = {
-    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    //new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    new SimpleDateFormat("yyyy-MM-dd")
   }
 
   import system.dispatcher
@@ -38,9 +33,13 @@ abstract class ApiRoot(requester: Requester, credentialsHeader: HttpHeader)(impl
     * Fetches data based on request
     */
   def fetch[A: Format](req: HttpRequest)(implicit um: Unmarshaller[HttpResponse, A]): Future[A] = {
-    val resp = requester.request(req)
-    resp.flatMap { x =>
-      Unmarshal(x).to[A]
+    val req2 = req.withHeaders(req.headers ++ security.toSeq:_*)
+    val resp = requester.request(req2)
+    import scala.concurrent.duration._
+    resp.flatMap {
+      case x if x.status.isFailure =>
+        Unmarshal(x).to[ErrorResult].flatMap(x => Future.failed(AvataxException(x)))
+      case x => Unmarshal(x).to[A]
     }
   }
 
@@ -84,6 +83,16 @@ abstract class ApiRoot(requester: Requester, credentialsHeader: HttpHeader)(impl
     new AvataxCollectionCall[A] {
       def batch(): Future[FetchResult[A]] = batchFetch[A](req)
       def stream: Source[A, NotUsed]      = continuousStream[A](req)
+    }
+
+  def avataxCollectionBodyCall[A:Writes, R:Format](req: HttpRequest, body:A)(implicit um: Unmarshaller[HttpResponse, FetchResult[R]]): AvataxCollectionCall[R] =
+    new AvataxCollectionCall[R] {
+      def batch(): Future[FetchResult[R]] = marshal(body).flatMap { ent =>
+        batchFetch[R](req.withEntity(ent))
+      }
+      def stream: Source[R, NotUsed]      = Source.fromFuture(marshal(body)).flatMapConcat { ent =>
+        continuousStream[R](req.withEntity(ent))
+      }
     }
 
   private def marshal[A: Writes](entity: A):Future[RequestEntity] = {

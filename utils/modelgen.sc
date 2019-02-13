@@ -17,8 +17,7 @@ import java.nio.charset.StandardCharsets
 
 // point to location where AvaTax is checked out
 val dir = new File("/tmp/AvaTax-REST-V2-JRE-SDK/src/main/java/net/avalara/avatax/rest/client/models")
-//val resultPath = "/tmp/models/"
-val resultPath = "/home/kadekm/Code/Upwork/external/avatax-client/modules/core/src/main/scala/org/upstartcommerce/avataxsdk/core/data/models"
+val resultPath = "/tmp/models/"
 
 def upperCaseFirstLetter(s:String):String = Character.toUpperCase(s.charAt(0)) + s.substring(1)
 def lowerCaseFirstLetter(s:String):String = Character.toLowerCase(s.charAt(0)) + s.substring(1)

@@ -72,6 +72,8 @@ lazy val scalacSettings = Seq(
     "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
     "-Ywarn-numeric-widen",              // Warn when numerics are widened.
     "-Ywarn-macros:before",
+    //"-Ywarn-unused:locals",              // Warn if a local definition is unused.
+    //"-Ywarn-unused:params",              // Warn if a value parameter is unused.
     "-Yrangepos"
   ),
   scalacOptions in (Compile, console) --= Seq("-Xfatal-warnings", "-Ywarn-unused:imports", "-Yno-imports"),

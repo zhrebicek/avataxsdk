@@ -5,12 +5,13 @@ import java.sql.Date
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.upstartcommerce.avataxsdk.client.AvataxClient
-import org.upstartcommerce.avataxsdk.core.data.{FiltrableQueryOptions, Include}
-import org.upstartcommerce.avataxsdk.core.data.models.ResetLicenseKeyModel
+import org.upstartcommerce.avataxsdk.client.AvataxClient.SecuritySettings
+import org.upstartcommerce.avataxsdk.core.data.{AvataxException, Environment, FiltrableQueryOptions, Include}
+import org.upstartcommerce.avataxsdk.core.data.models.{ErrorInfo, ErrorResult, ResetLicenseKeyModel, TaxRateModel}
 import org.upstartcommerce.avataxsdk.json
 import play.api.libs.json.{Format, Json}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
@@ -19,8 +20,8 @@ object Example extends App {
   implicit val sys: ActorSystem       = ActorSystem()
   implicit val mat: ActorMaterializer = ActorMaterializer()
 
-  val auth = System.getenv("AVATAX_BASE64")
-  val client = AvataxClient(auth)
+  val (un, pw) = (System.getenv("AVATAX_USERNAME"),System.getenv("AVATAX_PASSWORD"))
+  val client = AvataxClient(Environment.Sandbox, poolQueueSize = 128, security = Some(SecuritySettings(un, pw)))
 
   val req1 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(1)).batch()
   val resp1 = Await.result(req1, 30.seconds)
@@ -43,4 +44,11 @@ object Example extends App {
   val resp5 = Await.result(req5, 30.seconds)
   println(resp5)
 
+  val req6valid = client.taxRates.byPostalCode("US", "35802")
+  val req6invalid = client.taxRates.byPostalCode("USUS", "123123123123")
+  val req6:Future[Either[ErrorInfo, TaxRateModel]]  = req6invalid().map(Right.apply).recover {
+    case AvataxException(ErrorResult(Some(e))) => Left(e)
+  }
+  val resp6 = Await.result(req6, 30.seconds)
+  println(resp6)
 }
