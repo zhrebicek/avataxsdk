@@ -18,6 +18,7 @@ import akka.stream.scaladsl.Source
 import org.upstartcommerce.avataxsdk.core.data._
 import org.upstartcommerce.avataxsdk.core.data.models._
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
+import org.upstartcommerce.avataxsdk.client.api._
 import org.upstartcommerce.avataxsdk.core.data.enums._
 import org.upstartcommerce.avataxsdk.json._
 import play.api.libs.json._
@@ -30,14 +31,7 @@ import play.api.libs.json._
 // todo: group by apis
 // todo: check verify's, they return err
 trait AvataxClient {
-  def accountResetLicenseKey(id: Int,
-                             model: ResetLicenseKeyModel): AvataxSimpleCall[LicenseKeyModel]
 
-  def activateAccount(id: Int, model: ActivateAccountModel): AvataxSimpleCall[AccountModel]
-  def auditAccount(id:Int, start:Date, end:Date, options: BasicQueryOptions): AvataxCollectionCall[AuditModel]
-  def getAccount(id:Int, include:Include):AvataxSimpleCall[AccountModel] = ???
-  def getAccountConfiguration(id:Int):AvataxSimpleCall[AccountConfigurationModel] = ???
-  def queryAccounts(include:Include, options: FiltrableQueryOptions):AvataxCollectionCall[AccountConfigurationModel] = ???
   def setAccountConfiguration(id:Int, model:List[AccountConfigurationModel]):AvataxSimpleCall[List[AccountConfigurationModel]] = ???
   def resolveAddress(line1:String, line2:String, line3:String, city:String, region:String, postalCode:String, country:String, textCase:String):AvataxSimpleCall[AddressResolutionModel] = ???
   def resolveAddressPost(model:AddressValidationInfo):AvataxSimpleCall[AddressResolutionModel] = ???
@@ -118,63 +112,6 @@ trait AvataxClient {
   def listDataSources(companyId:Int, options:FiltrableQueryOptions):AvataxCollectionCall[DataSourceModel] = ???
   def queryDataSources(options:FiltrableQueryOptions):AvataxCollectionCall[DataSourceModel] = ???
   def updateDataSource(companyId:Int, id:Int, model:DataSourceModel):AvataxSimpleCall[DataSourceModel] = ???
-  def getCrossBorderCode(country:String, hsCode:String):AvataxCollectionCall[HsCodeModel] = ???
-  def getLoginVerifierByForm(form:String, options:FiltrableQueryOptions):AvataxCollectionCall[SkyscraperStatusModel] = ???
-  def listAvaFileForms(options:FiltrableQueryOptions):AvataxCollectionCall[AvaFileFormModel] = ???
-  def listCertificateAttributes(options:FiltrableQueryOptions):AvataxCollectionCall[LinkCertificatesModel] = ???
-  def listCertificateExemptReasons(options:FiltrableQueryOptions):AvataxCollectionCall[ExemptionReasonModel] = ???
-  def listCertificatesExposureZones(options:FiltrableQueryOptions):AvataxCollectionCall[ExposureZoneModel] = ???
-  def listCommunicationsServiceTypes(id:Int, options:FiltrableQueryOptions):AvataxCollectionCall[CommunicationsTSPairModel] = ???
-  def listCommunicationsTransactionTypes(options:FiltrableQueryOptions):AvataxCollectionCall[CommunicationsTransactionTypeModel] = ???
-  def listCommunicationsTSPairs(options:FiltrableQueryOptions):AvataxCollectionCall[CommunicationsTSPairModel] = ???
-  def listCountries(options:FiltrableQueryOptions):AvataxCollectionCall[IsoCountryModel] = ???
-  def listCoverLetters(options:FiltrableQueryOptions):AvataxCollectionCall[CoverLetterModel] = ???
-  def listCrossBorderCodes(country:String, hsCode:String, options:FiltrableQueryOptions):AvataxCollectionCall[HsCodeModel] = ???
-  def listCrossBorderSections():AvataxCollectionCall[HsCodeModel] = ???
-  def listCurrencies(options: FiltrableQueryOptions): AvataxCollectionCall[CurrencyModel]
-  def listEntityUseCodes(options:FiltrableQueryOptions):AvataxCollectionCall[EntityUseCodeModel] = ???
-  def listFilingFrequencies(options:FiltrableQueryOptions):AvataxCollectionCall[FilingFrequencyModel] = ???
-  def listJurisdictions(options:FiltrableQueryOptions):AvataxCollectionCall[JurisdictionModel] = ???
-  def listJurisdictionsByAddress(line1:String, line2:String, line3:String, city:String, region:String, postalCode:String, country:String, options:FiltrableQueryOptions):AvataxCollectionCall[JurisdictionOverrideModel] = ???
-  def listLocationQuestionsByAddress(line1:String, line2:String, line3:String, city:String, region:String, postalCode:String, country:String, latitude:BigDecimal, longitude:BigDecimal, options:FiltrableQueryOptions):AvataxCollectionCall[LocationQuestionModel] = ???
-  def listLoginVerifiers(options: FiltrableQueryOptions): AvataxCollectionCall[SkyscraperStatusModel] = ???
-  def listNexus(options: FiltrableQueryOptions): AvataxCollectionCall[NexusModel] = ???
-  def listNexusByAddress(line1:String, line2:String, line3:String, city:String, region:String, postalCode:String, country:String, options:FiltrableQueryOptions):AvataxCollectionCall[NexusModel] = ???
-  def listNexusByCountry(country:String, options:FiltrableQueryOptions):AvataxCollectionCall[NexusModel] = ???
-  def listNexusByCountryAndRegion(country:String, region:String, options:FiltrableQueryOptions):AvataxCollectionCall[NexusModel] = ???
-  def listNexusByFormCode(formCode:String, options:FiltrableQueryOptions):AvataxCollectionCall[NexusModel] = ???
-  def listNexusTaxTypeGroups(options:FiltrableQueryOptions):AvataxCollectionCall[NexusTaxTypeGroupModel] = ???
-  def listNoticeCustomerFundingOptions(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeCustomerFundingOptionModel] = ???
-  def listNoticeCustomerTypes(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeCustomerTypeModel] = ???
-  def listNoticeFilingTypes(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeFilingTypeModel] = ???
-  def listNoticePriorities(options:FiltrableQueryOptions):AvataxCollectionCall[NoticePriorityModel] = ???
-  def listNoticeReasons(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeReasonModel] = ???
-  def listNoticeResponsibilities(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeResponsibilityModel] = ???
-  def listNoticeRootCauses(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeRootCauseModel] = ???
-  def listNoticeStatuses(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeStatusModel] = ???
-  def listNoticeTypes(options:FiltrableQueryOptions):AvataxCollectionCall[NoticeTypeModel] = ???
-  def listParameters(options:FiltrableQueryOptions):AvataxCollectionCall[ParameterModel] = ???
-  def listParametersByItem(companyCode:String, itemCode:String, options:FiltrableQueryOptions):AvataxCollectionCall[ParameterModel] = ???
-  def listPermissions(options:BasicQueryOptions):AvataxCollectionCall[String] = ???
-  def listPostalCodes(options:FiltrableQueryOptions):AvataxCollectionCall[PostalCodeModel] = ???
-  def listPreferredPrograms(options:FiltrableQueryOptions):AvataxCollectionCall[PreferredProgramModel] = ???
-  def listProductClassificationSystems(options:FiltrableQueryOptions):AvataxCollectionCall[ProductClassificationSystemModel] = ???
-  def listProductClassificationSystemsByCompany(companyCode:String, options:FiltrableQueryOptions):AvataxCollectionCall[ProductClassificationSystemModel] = ???
-  def listRateTypesByCountry(country:String, options:FiltrableQueryOptions):AvataxCollectionCall[RateTypeModel] = ???
-  def listRegions(options:FiltrableQueryOptions):AvataxCollectionCall[IsoRegionModel] = ???
-  def listRegionsByCountry(country:String, options:FiltrableQueryOptions):AvataxCollectionCall[IsoRegionModel] = ???
-  def listResourceFileTypes(options:FiltrableQueryOptions):AvataxCollectionCall[ResourceFileTypeModel] = ???
-  def listSecurityRoles(options:FiltrableQueryOptions):AvataxCollectionCall[SecurityRoleModel] = ???
-  def listSubscriptionTypes(options:FiltrableQueryOptions):AvataxCollectionCall[SubscriptionTypeModel] = ???
-  def listTaxAuthorities(options:FiltrableQueryOptions):AvataxCollectionCall[TaxAuthorityModel] = ???
-  def listTaxAuthorityForms(options:FiltrableQueryOptions):AvataxCollectionCall[TaxAuthorityFormModel] = ???
-  def listTaxAuthorityTypes(options:FiltrableQueryOptions):AvataxCollectionCall[TaxAuthorityTypeModel] = ???
-  def listTaxCodes(options:FiltrableQueryOptions):AvataxCollectionCall[TaxCodeModel] = ???
-  def listTaxCodeTypes(options:FiltrableQueryOptions):AvataxCollectionCall[TaxCodeTypesModel] = ???
-  def listTaxForms(options:FiltrableQueryOptions):AvataxCollectionCall[FormMasterModel] = ???
-  def listTaxSubTypes(options:FiltrableQueryOptions):AvataxCollectionCall[TaxSubTypeModel] = ???
-  def listTaxTypeGroups(options:FiltrableQueryOptions):AvataxCollectionCall[TaxTypeGroupModel] = ???
-  def listUnitOfMeasurement(options:FiltrableQueryOptions):AvataxCollectionCall[UomModel] = ???
   def createDistanceThreshold(companyId:Int, model:List[CompanyDistanceThresholdModel]):AvataxSimpleCall[List[CompanyDistanceThresholdModel]] = ???
   def deleteDistanceThreshold(companyId:Int, id:Long):AvataxSimpleCall[List[ErrorDetail]] = ???
   def getDistanceThreshold(companyId:Int, id:Long):AvataxSimpleCall[CompanyDistanceThresholdModel] = ???
@@ -230,8 +167,8 @@ trait AvataxClient {
   def requestFreeTrial(model:FreeTrialRequestModel):AvataxSimpleCall[NewAccountModel] = ???
   def taxRatesByAddress(line1:String, line2:String, line3:String, city:String, region:String, postalCode:String, country:String):AvataxSimpleCall[TaxRateModel] = ???
   def taxRatesByPostalCode(country:String, postalCode:String):AvataxSimpleCall[TaxRateModel] = ???
-  def activateFundingRequest(id: Long): AvataxSimpleCall[FundingStatusModel]
-  def fundingRequestStatus(id: Long): AvataxSimpleCall[FundingStatusModel]
+  def activateFundingRequest(id: Long): AvataxSimpleCall[FundingStatusModel] = ???
+  def fundingRequestStatus(id: Long): AvataxSimpleCall[FundingStatusModel] = ???
   def createItemClassifications(companyId:Int, itemId:Long, model:List[ItemClassificationInputModel]):AvataxSimpleCall[List[ItemClassificationOutputModel]] = ???
   def createItemParameters(companyId:Int, itemId:Long, model:List[ItemParameterModel]):AvataxSimpleCall[List[ItemParameterModel]] = ???
   def createItems(companyId:Int, model:List[ItemModel]):AvataxSimpleCall[List[ItemModel]] = ???
@@ -381,30 +318,9 @@ trait AvataxClient {
   def getMySubscription(serviceTypeId:ServiceTypeId):AvataxSimpleCall[SubscriptionModel] = ???
   def listMySubscriptions():AvataxCollectionCall[SubscriptionModel] = ???
   def ping():AvataxSimpleCall[PingResultModel] = ???
-}
 
-sealed trait AvataxCall[+A]
-
-/**
-  * Simple calls are ones that return pure model, and have no possibility of pagination, offset...,
-  * and thus streaming makes little sense
-  */
-sealed trait AvataxSimpleCall[A] extends AvataxCall[A] {
-  def apply(): Future[A]
-}
-
-/**
-  * Enables both batch and streamed calls.
-  *
-  * Avatax imposes limit on how many resources it can return in one call, and thus it's
-  * up to client to split/limit/offset/paginate the requests should one need more than limit.
-  * For such cases one can use `stream` method, which does the pagination automatically (based
-  * on query options, same as with `Future` methods).
-  */
-sealed trait AvataxCollectionCall[A] extends AvataxCall[A] {
-  def batch(): Future[FetchResult[A]]
-  final def apply(): Future[FetchResult[A]] = batch()
-  def stream: Source[A, NotUsed]
+  def accounts: AccountsRootApi
+  def definitions: DefinitionsApi
 }
 
 object AvataxClient {
@@ -413,102 +329,13 @@ object AvataxClient {
 
     val poolFlow    = HostPool.forUrl("sandbox-rest.avatax.com")
     val requester   = Requester.pooled(poolFlow, 10)
-
     val credentials = headers.Authorization(GenericHttpCredentials("Basic", base64header))
-    val dateFmt  = {
-      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    }
 
-    import system.dispatcher
-
-    /**
-      * Fetches data based on request
-      */
-    def fetch[A: Format](req: HttpRequest)(
-        implicit um: Unmarshaller[HttpResponse, A]): Future[A] = {
-      val resp = requester.request(req)
-      resp.flatMap { x =>
-        Unmarshal(x).to[A]
-      }
-    }
-
-    /**
-      * Fetches one batch of data based on request
-      */
-    def batchFetch[A: Format](req: HttpRequest)(
-        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Future[FetchResult[A]] =
-      fetch[FetchResult[A]](req)
-
-    /**
-      * Pulls the data continously from source, following next link in resultset each time.
-      */
-    def continuousStream[A: Format](req: HttpRequest)(
-        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): Source[A, NotUsed] = {
-      Source
-        .unfoldAsync[Option[HttpRequest], List[A]](Some(req)) {
-          case Some(url) =>
-            batchFetch[A](url)
-              .map {
-                case FetchResult(_, values, Some(next)) => Some((Some(url.withUri(next)), values))
-                case FetchResult(_, values, None)       => Some((None, values))
-              }
-          case None => Future.successful(None)
-        }
-        .flatMapConcat(xs => Source(xs))
-    }
-
-    def avataxCollectionCall[A: Format](req: HttpRequest)(
-        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): AvataxCollectionCall[A] =
-      new AvataxCollectionCall[A] {
-        def batch(): Future[FetchResult[A]] = batchFetch[A](req)
-        def stream: Source[A, NotUsed]      = continuousStream[A](req)
-      }
-
-    def avataxSimpleCall[A: Format](req: HttpRequest)(
-        implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): AvataxSimpleCall[A] =
-      new AvataxSimpleCall[A] {
-        def apply(): Future[A] = fetch[A](req)
-      }
+    // impl
 
     new AvataxClient {
-      def accountResetLicenseKey(id: Int,
-                                 model: ResetLicenseKeyModel): AvataxSimpleCall[LicenseKeyModel] = {
-        val uri = Uri(s"/api/v2/accounts/$id/resetlicensekey")
-        val req = HttpRequest(uri = uri).withMethod(POST).withHeaders(credentials)
-        avataxSimpleCall[LicenseKeyModel](req)
-      }
-
-      def activateAccount(id: Int, model: ActivateAccountModel): AvataxSimpleCall[AccountModel] = {
-        val uri = Uri(s"/api/v2/accounts/$id/activate")
-        val req = HttpRequest(uri = uri).withMethod(POST).withHeaders(credentials)
-        avataxSimpleCall[AccountModel](req)
-      }
-
-      def auditAccount(id:Int, start:Date, end:Date, options: BasicQueryOptions): AvataxCollectionCall[AuditModel] = {
-        val uri = Uri(s"/api/v2/accounts/$id/audit").withQuery(options.asQuery.and("start", dateFmt.format(start)).and("end", dateFmt.format(end)))
-        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        avataxCollectionCall[AuditModel](req)
-      }
-
-      //
-      def activateFundingRequest(id: Long): AvataxSimpleCall[FundingStatusModel] = {
-        val uri = Uri(s"/api/v2/fundingrequests/$id/widget")
-        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        avataxSimpleCall[FundingStatusModel](req)
-      }
-
-      def fundingRequestStatus(id: Long): AvataxSimpleCall[FundingStatusModel] = {
-        val uri = Uri(s"/api/v2/fundingrequests/$id")
-        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        avataxSimpleCall[FundingStatusModel](req)
-      }
-
-
-      def listCurrencies(options: FiltrableQueryOptions): AvataxCollectionCall[CurrencyModel] = {
-        val uri = Uri("/api/v2/definitions/currencies").withQuery(options.asQuery)
-        val req = HttpRequest(uri = uri).withMethod(GET).withHeaders(credentials)
-        avataxCollectionCall[CurrencyModel](req)
-      }
+      val definitions: DefinitionsApi              = DefinitionsApi(requester, credentials)
+      val accounts:AccountsRootApi                = AccountsRootApi(requester, credentials)
     }
   }
 }

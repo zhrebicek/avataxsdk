@@ -14,10 +14,7 @@ object QueryOptions {
   def basic(top: Option[Int] = None, skip: Option[Int] = None): BasicQueryOptions =
     BasicQueryOptions(top, skip)
 
-  def filtrable(filter: Option[FilterAst],
-                top: Option[Int],
-                skip: Option[Int],
-                orderBy: Option[String]): FiltrableQueryOptions =
+  def filtrable(filter: Option[FilterAst], top: Option[Int], skip: Option[Int], orderBy: Option[String]): FiltrableQueryOptions =
     FiltrableQueryOptions(filter, top, skip, orderBy)
 }
 
@@ -32,8 +29,8 @@ final case class FiltrableQueryOptions(filter: Option[FilterAst] = None,
   def withOrderBy(orderBy: String): FiltrableQueryOptions  = copy(orderBy = Some(orderBy))
 }
 
-final case class Include(toInclude:List[String] = List.empty) {
-  override def toString: String = toInclude.mkString(",")
-  def and(other:String):Include = Include(toInclude :+ other)
-  def merge(other:Include):Include = Include(toInclude ++ other.toInclude)
+final case class Include(toInclude: List[String] = List.empty) {
+  override def toString: String      = toInclude.mkString(",")
+  def and(other: String): Include    = Include(toInclude :+ other)
+  def merge(other: Include): Include = Include(toInclude ++ other.toInclude)
 }
