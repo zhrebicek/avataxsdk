@@ -10,6 +10,7 @@ lazy val bintraySettings: Seq[Setting[_]] = Seq(
   publishMavenStyle := false)
 
 organization in ThisBuild := "org.upstartcommerce"
+licenses in ThisBuild += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
 
 lazy val notPublishSettings = Seq(
   publishArtifact := false,
