@@ -17,15 +17,15 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class ItemModel(id:Option[Long] = None, companyId:Option[Int] = None, itemCode:Option[String] = None, taxCodeId:Option[Int] = None, taxCode:Option[String] = None, description:Option[String] = None, itemGroup:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, classifications:Option[List[ClassificationModel]] = None, parameters:Option[List[ItemParameterModel]] = None) {
+final case class ItemModel(id:Long, companyId:Option[Int] = None, itemCode:String, taxCodeId:Option[Int] = None, taxCode:Option[String] = None, description:String, itemGroup:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None, classifications:Option[List[ClassificationModel]] = None, parameters:Option[List[ItemParameterModel]] = None) {
   lazy val classificationsRaw:List[ClassificationModel] = classifications.getOrElse(List.empty)
   lazy val parametersRaw:List[ItemParameterModel] = parameters.getOrElse(List.empty)
-  def withId(value:Long):ItemModel = copy(id = Some(value))
+  def withId(value:Long):ItemModel = copy(id = value)
   def withCompanyId(value:Int):ItemModel = copy(companyId = Some(value))
-  def withItemCode(value:String):ItemModel = copy(itemCode = Some(value))
+  def withItemCode(value:String):ItemModel = copy(itemCode = value)
   def withTaxCodeId(value:Int):ItemModel = copy(taxCodeId = Some(value))
   def withTaxCode(value:String):ItemModel = copy(taxCode = Some(value))
-  def withDescription(value:String):ItemModel = copy(description = Some(value))
+  def withDescription(value:String):ItemModel = copy(description = value)
   def withItemGroup(value:String):ItemModel = copy(itemGroup = Some(value))
   def withCreatedDate(value:Date):ItemModel = copy(createdDate = Some(value))
   def withCreatedUserId(value:Int):ItemModel = copy(createdUserId = Some(value))

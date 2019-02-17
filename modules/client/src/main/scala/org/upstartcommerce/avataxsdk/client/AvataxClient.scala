@@ -32,7 +32,6 @@ import play.api.libs.json._
 // todo: non-generic include as Set()
 // todo: typed orderBy
 // todo: enums
-// todo: options in models
 
 trait AvataxClient {
 

@@ -80,4 +80,3 @@ final case class FilingReturnModel(id:Option[Long] = None, filingRegionId:Option
   def withCreatedUserId(value:Int):FilingReturnModel = copy(createdUserId = Some(value))
   def withModifiedDate(value:Date):FilingReturnModel = copy(modifiedDate = Some(value))
 }
-  

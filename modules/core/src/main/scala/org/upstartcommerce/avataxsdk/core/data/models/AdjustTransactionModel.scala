@@ -17,10 +17,10 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class AdjustTransactionModel(adjustmentReason:Option[AdjustmentReason] = None, adjustmentDescription:Option[String] = None, newTransaction:Option[CreateTransactionModel] = None) {
+final case class AdjustTransactionModel(adjustmentReason:AdjustmentReason, adjustmentDescription:Option[String] = None, newTransaction:CreateTransactionModel) {
 
-  def withAdjustmentReason(value:AdjustmentReason):AdjustTransactionModel = copy(adjustmentReason = Some(value))
+  def withAdjustmentReason(value:AdjustmentReason):AdjustTransactionModel = copy(adjustmentReason = value)
   def withAdjustmentDescription(value:String):AdjustTransactionModel = copy(adjustmentDescription = Some(value))
-  def withNewTransaction(value:CreateTransactionModel):AdjustTransactionModel = copy(newTransaction = Some(value))
+  def withNewTransaction(value:CreateTransactionModel):AdjustTransactionModel = copy(newTransaction = value)
 }
   

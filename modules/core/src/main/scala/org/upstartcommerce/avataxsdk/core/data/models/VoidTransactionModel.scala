@@ -17,8 +17,8 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class VoidTransactionModel(code:Option[VoidReasonCode] = None) {
+final case class VoidTransactionModel(code:VoidReasonCode) {
 
-  def withCode(value:VoidReasonCode):VoidTransactionModel = copy(code = Some(value))
+  def withCode(value:VoidReasonCode):VoidTransactionModel = copy(code = value)
 }
   

@@ -17,11 +17,11 @@ package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class ContactModel(id:Option[Int] = None, companyId:Option[Int] = None, contactCode:Option[String] = None, firstName:Option[String] = None, middleName:Option[String] = None, lastName:Option[String] = None, title:Option[String] = None, line1:Option[String] = None, line2:Option[String] = None, line3:Option[String] = None, city:Option[String] = None, region:Option[String] = None, postalCode:Option[String] = None, country:Option[String] = None, email:Option[String] = None, phone:Option[String] = None, mobile:Option[String] = None, fax:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None) {
+final case class ContactModel(id:Int, companyId:Option[Int] = None, contactCode:String, firstName:Option[String] = None, middleName:Option[String] = None, lastName:Option[String] = None, title:Option[String] = None, line1:Option[String] = None, line2:Option[String] = None, line3:Option[String] = None, city:Option[String] = None, region:Option[String] = None, postalCode:Option[String] = None, country:Option[String] = None, email:Option[String] = None, phone:Option[String] = None, mobile:Option[String] = None, fax:Option[String] = None, createdDate:Option[Date] = None, createdUserId:Option[Int] = None, modifiedDate:Option[Date] = None, modifiedUserId:Option[Int] = None) {
 
-  def withId(value:Int):ContactModel = copy(id = Some(value))
+  def withId(value:Int):ContactModel = copy(id = value)
   def withCompanyId(value:Int):ContactModel = copy(companyId = Some(value))
-  def withContactCode(value:String):ContactModel = copy(contactCode = Some(value))
+  def withContactCode(value:String):ContactModel = copy(contactCode = value)
   def withFirstName(value:String):ContactModel = copy(firstName = Some(value))
   def withMiddleName(value:String):ContactModel = copy(middleName = Some(value))
   def withLastName(value:String):ContactModel = copy(lastName = Some(value))

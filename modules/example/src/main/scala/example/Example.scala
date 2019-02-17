@@ -47,7 +47,7 @@ object Example extends App {
   val resp2 = Await.result(resp2f, 30.seconds)
   println(resp2)
 
-  val req3 = client.accounts.forAccount(200034713).resetLicenseKey(ResetLicenseKeyModel().withAccountId(200034713).withConfirmResetLicenseKey(true)).apply()
+  val req3 = client.accounts.forAccount(200034713).resetLicenseKey(ResetLicenseKeyModel(200034713, confirmResetLicenseKey = true)).apply()
   val resp3 = Await.result(req3, 30.seconds)
   println(resp3)
 

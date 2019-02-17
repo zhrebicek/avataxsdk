@@ -109,8 +109,8 @@ private[json] trait GenModelFormats {
   implicit def advancedRuleTableModelOFormat: OFormat[AdvancedRuleTableModel] =
     Json.format[AdvancedRuleTableModel]
   implicit def requiredFilingCalendarDataFieldModelOFormat
-  : OFormat[requiredFilingCalendarDataFieldModel] =
-    Json.format[requiredFilingCalendarDataFieldModel]
+  : OFormat[RequiredFilingCalendarDataFieldModel] =
+    Json.format[RequiredFilingCalendarDataFieldModel]
   implicit def reportModelOFormat: OFormat[ReportModel] = Json.format[ReportModel]
   implicit def noticeResponsibilityDetailModelOFormat: OFormat[NoticeResponsibilityDetailModel] =
     Json.format[NoticeResponsibilityDetailModel]
