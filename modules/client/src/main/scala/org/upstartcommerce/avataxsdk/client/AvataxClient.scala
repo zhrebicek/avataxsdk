@@ -30,7 +30,6 @@ import play.api.libs.json._
 // todo: swap strings for enums
 // todo: remove .toStrings (from enums etc.)
 // todo: non-generic include as Set()
-// todo: typed orderBy
 // todo: enums
 
 trait AvataxClient {

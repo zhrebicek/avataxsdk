@@ -21,7 +21,8 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import org.upstartcommerce.avataxsdk.client.AvataxClient
 import org.upstartcommerce.avataxsdk.client.AvataxClient.SecuritySettings
-import org.upstartcommerce.avataxsdk.core.data.{AvataxException, Environment, FiltrableQueryOptions, Include}
+import org.upstartcommerce.avataxsdk.core.data.OrderBy.OrderByClause
+import org.upstartcommerce.avataxsdk.core.data._
 import org.upstartcommerce.avataxsdk.core.data.models.{ErrorInfo, ErrorResult, ResetLicenseKeyModel, TaxRateModel}
 import org.upstartcommerce.avataxsdk.json
 import play.api.libs.json.{Format, Json}
@@ -42,7 +43,7 @@ object Example extends App {
   val resp1 = Await.result(req1, 30.seconds)
   println(resp1)
 
-  val req2 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50)).stream
+  val req2 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50).withOrderBy(OrderBy("description", OrderBy.Ascending))).stream
   val resp2f = req2.runForeach(x => println(x))
   val resp2 = Await.result(resp2f, 30.seconds)
   println(resp2)

@@ -14,6 +14,7 @@
  */
 
 package org.upstartcommerce.avataxsdk.core.data
+import org.upstartcommerce.avataxsdk.core.data.OrderBy.OrderByClause
 
 sealed trait QueryOptions {
   def top: Option[Int]
@@ -29,19 +30,19 @@ object QueryOptions {
   def basic(top: Option[Int] = None, skip: Option[Int] = None): BasicQueryOptions =
     BasicQueryOptions(top, skip)
 
-  def filtrable(filter: Option[FilterAst], top: Option[Int], skip: Option[Int], orderBy: Option[String]): FiltrableQueryOptions =
+  def filtrable(filter: Option[FilterAst], top: Option[Int], skip: Option[Int], orderBy: Option[OrderByClause]): FiltrableQueryOptions =
     FiltrableQueryOptions(filter, top, skip, orderBy)
 }
 
 final case class FiltrableQueryOptions(filter: Option[FilterAst] = None,
                                        top: Option[Int] = None,
                                        skip: Option[Int] = None,
-                                       orderBy: Option[String] = None)
+                                       orderBy: Option[OrderByClause] = None)
     extends QueryOptions {
   def withFilter(filter: FilterAst): FiltrableQueryOptions = copy(filter = Some(filter))
   def withTop(top: Int): FiltrableQueryOptions             = copy(top = Some(top))
   def withSkip(skip: Int): FiltrableQueryOptions           = copy(skip = Some(skip))
-  def withOrderBy(orderBy: String): FiltrableQueryOptions  = copy(orderBy = Some(orderBy))
+  def withOrderBy(orderBy: OrderByClause): FiltrableQueryOptions  = copy(orderBy = Some(orderBy))
 }
 
 final case class Include(toInclude: List[String] = List.empty) {

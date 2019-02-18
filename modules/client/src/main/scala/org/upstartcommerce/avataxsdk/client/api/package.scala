@@ -26,8 +26,8 @@ package object api {
       val further = q match {
         case BasicQueryOptions(_, _) => List.empty
         case FiltrableQueryOptions(filter, _, _, orderBy) =>
-          filter.map(x => "$filter" -> FilterAst.serialize(x)).toList ++ orderBy
-            .map(x => "$orderBy"    -> x)
+          filter.map(x => "$filter" -> FilterAst.serialize(x)).toList ++
+            orderBy.map(x => "$orderBy"    -> OrderBy.serialize(x))
             .toList
       }
 
