@@ -5,7 +5,7 @@ lazy val bintraySettings: Seq[Setting[_]] = Seq(
   bintrayOmitLicense := true,
   bintrayOrganization := Some("upstartcommerce"),
   bintrayRepository := "nochannel",
-  bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/synchrony-client.git"),
+  bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/avatax-sdk.git"),
   bintrayReleaseOnPublish in ThisBuild := false,
   publishMavenStyle := false)
 
