@@ -4,13 +4,12 @@ resolvers in Global += Resolver.url("upstartcommerce", url("https://upstartcomme
 lazy val bintraySettings: Seq[Setting[_]] = Seq(
   bintrayOmitLicense := true,
   bintrayOrganization := Some("upstartcommerce"),
-  bintrayRepository := "nochannel",
-  bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/avatax-sdk.git"),
+  bintrayRepository := "generic",
   bintrayReleaseOnPublish in ThisBuild := false,
   publishMavenStyle := false)
 
 organization in ThisBuild := "org.upstartcommerce"
-licenses in ThisBuild += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
+licenses in ThisBuild += ("Apache-2.0", url("https://bintray.com/upstartcommerce"))
 
 lazy val notPublishSettings = Seq(
   publishArtifact := false,
@@ -92,6 +91,8 @@ lazy val core = project
   .settings(commonSettings)
   .settings(
     name := "avataxsdk-core",
+    bintraySettings,
+    bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/generic/avatax-core.git"),
     libraryDependencies ++= Seq(
       "org.scalatest"     %% "scalatest"      % scalatestV % "test"
     ),
@@ -101,6 +102,7 @@ lazy val jsonPlay = project
   .in(file("modules/json-play"))
   .settings(commonSettings)
   .settings(
+    notPublishSettings,
     name := "avataxsdk-json-play",
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json"                % playJsonV,
@@ -116,6 +118,8 @@ lazy val client = project
   .settings(commonSettings)
   .settings(
     name := "avataxsdk-client",
+    bintraySettings,
+    bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/generic/avatax-client.git"),
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core"           % akkaHttpV,
       "com.typesafe.akka" %% "akka-stream"              % akkaStreamV,
