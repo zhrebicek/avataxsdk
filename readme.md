@@ -1,5 +1,7 @@
 # Avatax Client
 
+![build](https://travis-ci.org/upstart-commerce/avataxsdk.svg?branch=devel)
+
 Pure Scala library for interaction with Avatax APIs.
 
 Project is split into following modules:
