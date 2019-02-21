@@ -22,8 +22,4 @@ final class FilterAstTests extends WordSpec {
 
   import org.upstartcommerce.avataxsdk.core.data.FilterAst.syntax._
 
-  "some" in {
-    assert(false)
-  }
-
 }
