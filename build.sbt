@@ -92,7 +92,6 @@ lazy val core = project
   .settings(
     name := "avataxsdk-core",
     bintraySettings,
-    bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/generic/avatax-core.git"),
     libraryDependencies ++= Seq(
       "org.scalatest"     %% "scalatest"      % scalatestV % "test"
     ),
@@ -102,7 +101,7 @@ lazy val jsonPlay = project
   .in(file("modules/json-play"))
   .settings(commonSettings)
   .settings(
-    notPublishSettings,
+    bintraySettings,
     name := "avataxsdk-json-play",
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json"                % playJsonV,
@@ -118,8 +117,6 @@ lazy val client = project
   .settings(commonSettings)
   .settings(
     name := "avataxsdk-client",
-    bintraySettings,
-    bintrayVcsUrl := Some("git@bitbucket.org:upstartcommerce/generic/avatax-client.git"),
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core"           % akkaHttpV,
       "com.typesafe.akka" %% "akka-stream"              % akkaStreamV,

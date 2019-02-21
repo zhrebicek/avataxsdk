@@ -11,18 +11,19 @@ Project is split into following modules:
 ### Installation
 
 Add following to your build.sbt
-```
-libraryDependencies += "TODO"
+```scala
+resolvers in Global += Resolver.url("upstartcommerce", url("https://upstartcommerce.bintray.com/generic"))(Resolver.ivyStylePatterns)
+
+libraryDependencies += "org.upstartcommerce" %% "avataxsdk-client" % "0.0.1" // or whatever latest version is
+
+// or if you want ONLY data model
+// libraryDependencies += "org.upstartcommerce" %% "avataxsdk-core" % "0.0.1"
 ```
 
 ### Usage
 
-There is a good reference for data model [here](https://developer.avalara.com/api-reference/avatax/rest/v2/models/)
-
-Please do not ever block (await) on futures.
-
 Basic usage is:
-```
+```scala
   implicit val sys: ActorSystem       = ActorSystem()
   implicit val mat: ActorMaterializer = ActorMaterializer()
   val client = AvataxClient(...)
@@ -39,8 +40,12 @@ Basic usage is:
   val streamReq = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50)).stream
   streamReq.runForeach(x => println(x))
 ```
-
 See `example` subproject for more examples.
+
+There is a good reference for data model [here](https://developer.avalara.com/api-reference/avatax/rest/v2/models/)
+
+Please avoid blocking (awaiting) on futures from this api.
+
 
 
 ### Compilation
