@@ -5,7 +5,6 @@ pipelines:
     master:
       - step :
           script: # Modify the commands below to build your repository.
-            - mkdir ~/.lightbend ~/.bintray
-            - printf "realm = Bintray\nhost = dl.bintray.com\nuser = $LIGHTBEND_USER\npassword = $LIGHTBEND_PASS\n">>~/.lightbend/commercial.credentials
+            - mkdir ~/.bintray
             - printf "realm = Bintray API Realm\nhost = upstartcomme rce.bintray.com\nuser = $BINTRAY_USER\npassword = $BINTRAY_PASS\n\nrealm = Bintray\nhost = upstartcommerce.bintray.com\nuser = $BINTRAY_USER\npassword = $BINTRAY_PASS\n">>~/.bintray/.credentials
-            - sbt compile test publish bintrayRelease
+            - sbt compile test
