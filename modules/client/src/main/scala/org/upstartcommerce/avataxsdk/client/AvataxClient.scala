@@ -77,10 +77,10 @@ object AvataxClient {
     val poolFlow    = HostPool.forUrl(environment.url)
     val requester   = Requester.pooled(poolFlow, poolQueueSize)
     val credentials = security.map(x => headers.Authorization(BasicHttpCredentials(x.username, x.password)))
-    apply(poolFlow, requester, credentials)
+    apply(requester, credentials)
   }
 
-  def apply(pool:HostPool, requester:Requester, security:Option[Authorization])(implicit system: ActorSystem,
+  def apply(requester:Requester, security:Option[Authorization])(implicit system: ActorSystem,
                                   materializer: ActorMaterializer): AvataxClient = {
 
     new ApiRoot(requester, security) with AvataxClient {
