@@ -81,12 +81,12 @@ abstract class ApiRoot(requester: Requester, security: Option[Authorization])(im
       .flatMapConcat(xs => Source(xs))
   }
 
-  def avataxSimpleCall[A: Format](req: HttpRequest)(implicit um: Unmarshaller[HttpResponse, FetchResult[A]]): AvataxSimpleCall[A] =
+  def avataxSimpleCall[A: Format](req: HttpRequest)(implicit um: Unmarshaller[HttpResponse, A]): AvataxSimpleCall[A] =
     new AvataxSimpleCall[A] {
       def apply(): Future[A] = fetch[A](req)
     }
 
-  def avataxBodyCall[A:Writes, R: Format](req: HttpRequest, body:A)(implicit um: Unmarshaller[HttpResponse, FetchResult[R]]): AvataxSimpleCall[R] =
+  def avataxBodyCall[A:Writes, R: Format](req: HttpRequest, body:A)(implicit um: Unmarshaller[HttpResponse, R]): AvataxSimpleCall[R] =
     new AvataxSimpleCall[R] {
       def apply(): Future[R] = marshal(body).flatMap { ent =>
         val req2 = req.withEntity(ent)

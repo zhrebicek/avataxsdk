@@ -154,7 +154,7 @@ object DefinitionsRootApi {
       }
 
       def listCommunicationsServiceTypes(id: Int, options: FiltrableQueryOptions): AvataxCollectionCall[CommunicationsTSPairModel] = {
-        val uri = Uri("/api/v2/definitions/communications/transactiontypes/$id/servicetypes").withQuery(options.asQuery)
+        val uri = Uri(s"/api/v2/definitions/communications/transactiontypes/$id/servicetypes").withQuery(options.asQuery)
         val req = HttpRequest(uri = uri).withMethod(GET)
         avataxCollectionCall[CommunicationsTSPairModel](req)
       }
@@ -371,7 +371,7 @@ object DefinitionsRootApi {
         avataxCollectionCall[ProductClassificationSystemModel](req)
       }
       def listRateTypesByCountry(country: String, options: FiltrableQueryOptions): AvataxCollectionCall[RateTypeModel] = {
-        val uri = Uri("/api/v2/definitions/countries/$country/ratetypes")
+        val uri = Uri(s"/api/v2/definitions/countries/$country/ratetypes")
         val req = HttpRequest(uri = uri).withMethod(GET)
         avataxCollectionCall[RateTypeModel](req)
       }

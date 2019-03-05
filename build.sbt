@@ -116,6 +116,7 @@ lazy val client = project
   .in(file("modules/client"))
   .settings(commonSettings)
   .settings(
+    bintraySettings,
     name := "avataxsdk-client",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http-core"           % akkaHttpV,
