@@ -15,13 +15,15 @@
 
 package org.upstartcommerce.avataxsdk.core.data.models
 import java.sql.Date
+import java.time.Instant
+
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class CreateTransactionModel(code: Option[String] = None,
                                         lines: List[LineItemModel],
                                         `type`: Option[DocumentType] = None,
                                         companyCode: Option[String] = None,
-                                        date: Date,
+                                        date: Instant,
                                         salespersonCode: Option[String] = None,
                                         customerCode: String,
                                         customerUsageType: Option[String] = None,
@@ -51,7 +53,7 @@ final case class CreateTransactionModel(code: Option[String] = None,
   def withLines(value: List[LineItemModel]): CreateTransactionModel        = copy(lines = value)
   def withType(value: DocumentType): CreateTransactionModel                = copy(`type` = Some(value))
   def withCompanyCode(value: String): CreateTransactionModel               = copy(companyCode = Some(value))
-  def withDate(value: Date): CreateTransactionModel                        = copy(date = value)
+  def withDate(value: Instant): CreateTransactionModel                        = copy(date = value)
   def withSalespersonCode(value: String): CreateTransactionModel           = copy(salespersonCode = Some(value))
   def withCustomerCode(value: String): CreateTransactionModel              = copy(customerCode = value)
   def withCustomerUsageType(value: String): CreateTransactionModel         = copy(customerUsageType = Some(value))
