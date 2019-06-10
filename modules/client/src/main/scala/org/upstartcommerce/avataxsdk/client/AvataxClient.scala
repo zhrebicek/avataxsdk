@@ -37,6 +37,7 @@ trait AvataxClient {
   def accounts: AccountsRootApi
   def addresses: AddressesRootApi
   def batches: BatchesRootApi
+  def companies: CompaniesRootApi
   def definitions: DefinitionsRootApi
   def contacts: ContactsRootApi
   def dataSources: DataSourcesRootApi
@@ -56,6 +57,7 @@ trait AvataxClient {
   def reports: ReportsRootApi
   def settings: SettingsRootApi
   def taxCodes: TaxCodesRootApi
+  def subscriptions: SubscriptionsRootApi
   def taxContents: TaxContentsRootApi
   def upcs:UPCRootApi
   def users:UsersRootApi
