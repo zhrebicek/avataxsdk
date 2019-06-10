@@ -20,7 +20,7 @@ object DocumentStatus {
   case object Temporary extends DocumentStatus
   case object Saved extends DocumentStatus
   case object Posted extends DocumentStatus
-  case object Commited extends DocumentStatus
+  case object Committed extends DocumentStatus
   case object Cancelled extends DocumentStatus
   case object Adjusted extends DocumentStatus
 
