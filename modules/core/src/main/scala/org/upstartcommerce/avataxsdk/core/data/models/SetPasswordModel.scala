@@ -14,11 +14,9 @@
  */
 
 package org.upstartcommerce.avataxsdk.core.data.models
-import java.sql.Date
-import org.upstartcommerce.avataxsdk.core.data.enums._
 
-final case class SetPasswordModel(newPassword:String) {
+final case class SetPasswordModel(newPassword: String) {
 
-  def withNewPassword(value:String):SetPasswordModel = copy(newPassword = value)
+  def withNewPassword(value: String): SetPasswordModel = copy(newPassword = value)
 }
   

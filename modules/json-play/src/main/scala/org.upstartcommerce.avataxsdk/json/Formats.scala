@@ -16,8 +16,8 @@
 package org.upstartcommerce.avataxsdk.json
 
 import org.upstartcommerce.avataxsdk.core.data.FetchResult
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 private[json] trait Formats {
   implicit def recordSetOFormat[A](implicit f: Format[List[A]]): OFormat[FetchResult[A]] = new FetchResultFormat[A]

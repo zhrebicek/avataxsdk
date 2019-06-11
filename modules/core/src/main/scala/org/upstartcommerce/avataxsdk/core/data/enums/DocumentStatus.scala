@@ -16,12 +16,19 @@
 package org.upstartcommerce.avataxsdk.core.data.enums
 
 sealed trait DocumentStatus
+
 object DocumentStatus {
+
   case object Temporary extends DocumentStatus
+
   case object Saved extends DocumentStatus
+
   case object Posted extends DocumentStatus
+
   case object Committed extends DocumentStatus
+
   case object Cancelled extends DocumentStatus
+
   case object Adjusted extends DocumentStatus
 
   @deprecated("based on sdk", "unknown")

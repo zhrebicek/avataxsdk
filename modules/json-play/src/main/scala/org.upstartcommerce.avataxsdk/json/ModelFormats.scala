@@ -15,12 +15,9 @@
 
 package org.upstartcommerce.avataxsdk.json
 
-import java.sql.Date
-
-import org.upstartcommerce.avataxsdk.core.data.enums._
+import ai.x.play.json.Jsonx
 import org.upstartcommerce.avataxsdk.core.data.models._
 import play.api.libs.json._
-import ai.x.play.json.Jsonx
 
 /** defines formats for all models that are not generated (probably due to amount of columns)
   * use external derivation for now */

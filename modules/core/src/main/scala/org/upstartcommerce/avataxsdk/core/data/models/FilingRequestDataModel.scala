@@ -14,7 +14,9 @@
  */
 
 package org.upstartcommerce.avataxsdk.core.data.models
-import java.sql.Date
+
+import java.time.Instant
+
 import org.upstartcommerce.avataxsdk.core.data.enums._
 
 final case class FilingRequestDataModel(companyReturnId: Option[Long] = None,
@@ -25,29 +27,45 @@ final case class FilingRequestDataModel(companyReturnId: Option[Long] = None,
                                         months: Short,
                                         taxTypeId: Option[MatchingTaxType] = None,
                                         locationCode: Option[String] = None,
-                                        effDate: Date,
-                                        endDate: Option[Date] = None,
+                                        effDate: Instant,
+                                        endDate: Option[Instant] = None,
                                         isClone: Option[Boolean] = None,
                                         country: Option[String] = None,
                                         region: Option[String] = None,
                                         taxAuthorityId: Option[Int] = None,
                                         taxAuthorityName: Option[String] = None,
                                         answers: Option[List[FilingAnswerModel]] = None) {
-  lazy val answersRaw: List[FilingAnswerModel]                                = answers.getOrElse(List.empty)
-  def withCompanyReturnId(value: Long): FilingRequestDataModel                = copy(companyReturnId = Some(value))
-  def withReturnName(value: String): FilingRequestDataModel                   = copy(returnName = Some(value))
-  def withTaxFormCode(value: String): FilingRequestDataModel                  = copy(taxFormCode = Some(value))
+  lazy val answersRaw: List[FilingAnswerModel] = answers.getOrElse(List.empty)
+
+  def withCompanyReturnId(value: Long): FilingRequestDataModel = copy(companyReturnId = Some(value))
+
+  def withReturnName(value: String): FilingRequestDataModel = copy(returnName = Some(value))
+
+  def withTaxFormCode(value: String): FilingRequestDataModel = copy(taxFormCode = Some(value))
+
   def withFilingFrequencyId(value: FilingFrequencyId): FilingRequestDataModel = copy(filingFrequencyId = value)
-  def withRegistrationId(value: String): FilingRequestDataModel               = copy(registrationId = Some(value))
-  def withMonths(value: Short): FilingRequestDataModel                        = copy(months = value)
-  def withTaxTypeId(value: MatchingTaxType): FilingRequestDataModel           = copy(taxTypeId = Some(value))
-  def withLocationCode(value: String): FilingRequestDataModel                 = copy(locationCode = Some(value))
-  def withEffDate(value: Date): FilingRequestDataModel                        = copy(effDate = value)
-  def withEndDate(value: Date): FilingRequestDataModel                        = copy(endDate = Some(value))
-  def withIsClone(value: Boolean): FilingRequestDataModel                     = copy(isClone = Some(value))
-  def withCountry(value: String): FilingRequestDataModel                      = copy(country = Some(value))
-  def withRegion(value: String): FilingRequestDataModel                       = copy(region = Some(value))
-  def withTaxAuthorityId(value: Int): FilingRequestDataModel                  = copy(taxAuthorityId = Some(value))
-  def withTaxAuthorityName(value: String): FilingRequestDataModel             = copy(taxAuthorityName = Some(value))
-  def withAnswers(value: List[FilingAnswerModel]): FilingRequestDataModel     = copy(answers = Some(value))
+
+  def withRegistrationId(value: String): FilingRequestDataModel = copy(registrationId = Some(value))
+
+  def withMonths(value: Short): FilingRequestDataModel = copy(months = value)
+
+  def withTaxTypeId(value: MatchingTaxType): FilingRequestDataModel = copy(taxTypeId = Some(value))
+
+  def withLocationCode(value: String): FilingRequestDataModel = copy(locationCode = Some(value))
+
+  def withEffDate(value: Instant): FilingRequestDataModel = copy(effDate = value)
+
+  def withEndDate(value: Instant): FilingRequestDataModel = copy(endDate = Some(value))
+
+  def withIsClone(value: Boolean): FilingRequestDataModel = copy(isClone = Some(value))
+
+  def withCountry(value: String): FilingRequestDataModel = copy(country = Some(value))
+
+  def withRegion(value: String): FilingRequestDataModel = copy(region = Some(value))
+
+  def withTaxAuthorityId(value: Int): FilingRequestDataModel = copy(taxAuthorityId = Some(value))
+
+  def withTaxAuthorityName(value: String): FilingRequestDataModel = copy(taxAuthorityName = Some(value))
+
+  def withAnswers(value: List[FilingAnswerModel]): FilingRequestDataModel = copy(answers = Some(value))
 }

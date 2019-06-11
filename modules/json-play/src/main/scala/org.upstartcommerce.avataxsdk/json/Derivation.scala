@@ -16,7 +16,6 @@
 package org.upstartcommerce.avataxsdk.json
 
 import play.api.libs.json._
-
 import shapeless._
 import shapeless.labelled._
 
