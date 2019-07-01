@@ -38,6 +38,7 @@ object Requester {
         case (Success(resp), p) => p.success(resp)
         case (Failure(e), p) => p.failure(e)
       }))(Keep.left)
+      .named("avataxsdk-client")
       .run()
 
     new Requester {
