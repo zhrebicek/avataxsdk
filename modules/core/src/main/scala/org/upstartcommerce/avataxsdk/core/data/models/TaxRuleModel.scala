@@ -29,7 +29,6 @@ final case class TaxRuleModel(id: Int,
                               customerUsageType: Option[String] = None,
                               entityUseCode: Option[String] = None,
                               taxTypeId: Option[MatchingTaxType] = None,
-                              rateTypeId: Option[RateType] = None,
                               rateTypeCode: Option[String] = None,
                               taxRuleTypeId: TaxRuleTypeId,
                               isAllJuris: Option[Boolean] = None,
@@ -68,7 +67,6 @@ final case class TaxRuleModel(id: Int,
   def withCustomerUsageType(value: String): TaxRuleModel            = copy(customerUsageType = Some(value))
   def withEntityUseCode(value: String): TaxRuleModel                = copy(entityUseCode = Some(value))
   def withTaxTypeId(value: MatchingTaxType): TaxRuleModel           = copy(taxTypeId = Some(value))
-  def withRateTypeId(value: RateType): TaxRuleModel                 = copy(rateTypeId = Some(value))
   def withRateTypeCode(value: String): TaxRuleModel                 = copy(rateTypeCode = Some(value))
   def withTaxRuleTypeId(value: TaxRuleTypeId): TaxRuleModel         = copy(taxRuleTypeId = value)
   def withIsAllJuris(value: Boolean): TaxRuleModel                  = copy(isAllJuris = Some(value))
