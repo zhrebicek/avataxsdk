@@ -15,10 +15,10 @@
 
 package org.upstartcommerce.avataxsdk.client.core
 
+import org.scalatest.wordspec.AnyWordSpec
 import org.upstartcommerce.avataxsdk.core.data.FilterAst._
-import org.scalatest.{FreeSpec, Matchers, WordSpec}
 
-final class FilterAstTests extends WordSpec {
+final class FilterAstTests extends AnyWordSpec {
 
   import org.upstartcommerce.avataxsdk.core.data.FilterAst.syntax._
 

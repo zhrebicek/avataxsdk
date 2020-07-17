@@ -18,7 +18,7 @@ package org.upstartcommerce.avataxsdk.client.api
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpMethods._
 import akka.http.scaladsl.model._
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import org.upstartcommerce.avataxsdk.client._
 import org.upstartcommerce.avataxsdk.client.internal._
 import org.upstartcommerce.avataxsdk.core.data._
@@ -31,17 +31,20 @@ import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
 
 /** /api/v2/datasources */
 trait DataSourcesRootApi {
-  def forDataSourceId(dataSourceId:Int): DataSourcesApi
+  def forDataSourceId(dataSourceId: Int): DataSourcesApi
 
-  def query(options:FiltrableQueryOptions):AvataxCollectionCall[DataSourceModel]
+  def query(options: FiltrableQueryOptions): AvataxCollectionCall[DataSourceModel]
 }
 
 object DataSourcesRootApi {
-  def apply(requester: Requester, security: Option[Authorization])(implicit system: ActorSystem, materializer: ActorMaterializer): DataSourcesRootApi =
+  def apply(
+      requester: Requester,
+      security: Option[Authorization]
+  )(implicit system: ActorSystem, materializer: Materializer): DataSourcesRootApi =
     new ApiRoot(requester, security) with DataSourcesRootApi {
       def forDataSourceId(dataSourceId: Int): DataSourcesApi = DataSourcesApi(requester, security)(dataSourceId)
 
-      def query(options:FiltrableQueryOptions):AvataxCollectionCall[DataSourceModel] = {
+      def query(options: FiltrableQueryOptions): AvataxCollectionCall[DataSourceModel] = {
         val uri = Uri(s"/api/v2/datasources").withQuery(options.asQuery)
         val req = HttpRequest(uri = uri).withMethod(GET)
         avataxCollectionCall[DataSourceModel](req)
@@ -52,6 +55,8 @@ object DataSourcesRootApi {
 /** /api/v2/datasources/$dataSourceId */
 trait DataSourcesApi {}
 object DataSourcesApi {
-  def apply(requester: Requester, security: Option[Authorization])(dataSourceId:Int)(implicit system: ActorSystem, materializer: ActorMaterializer): DataSourcesApi =
+  def apply(requester: Requester, security: Option[Authorization])(
+      dataSourceId: Int
+  )(implicit system: ActorSystem, materializer: Materializer): DataSourcesApi =
     new ApiRoot(requester, security) with DataSourcesApi {}
 }

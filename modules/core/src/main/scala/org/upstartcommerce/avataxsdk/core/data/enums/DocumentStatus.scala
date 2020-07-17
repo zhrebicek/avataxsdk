@@ -15,6 +15,8 @@
 
 package org.upstartcommerce.avataxsdk.core.data.enums
 
+import scala.annotation.nowarn
+
 sealed trait DocumentStatus
 object DocumentStatus {
   case object Temporary extends DocumentStatus
@@ -29,6 +31,7 @@ object DocumentStatus {
 
   case object PendingApproval extends DocumentStatus
 
+  @nowarn
   @deprecated("based on sdk", "unknown")
   case object Any extends DocumentStatus
 

@@ -18,7 +18,7 @@ package example
 import java.sql.Date
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import org.upstartcommerce.avataxsdk.client.AvataxClient
 import org.upstartcommerce.avataxsdk.client.AvataxClient.SecuritySettings
 import org.upstartcommerce.avataxsdk.core.data.OrderBy.OrderByClause
@@ -27,23 +27,26 @@ import org.upstartcommerce.avataxsdk.core.data.models.{ErrorInfo, ErrorResult, R
 import org.upstartcommerce.avataxsdk.json
 import play.api.libs.json.{Format, Json}
 
+import scala.annotation.nowarn
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
+@nowarn
 object Example extends App {
 
-  implicit val sys: ActorSystem       = ActorSystem()
-  implicit val mat: ActorMaterializer = ActorMaterializer()
+  implicit val sys: ActorSystem = ActorSystem()
+  implicit val mat: Materializer = Materializer(sys)
 
-  val (un, pw) = (System.getenv("AVATAX_USERNAME"),System.getenv("AVATAX_PASSWORD"))
+  val (un, pw) = (System.getenv("AVATAX_USERNAME"), System.getenv("AVATAX_PASSWORD"))
   val client = AvataxClient(Environment.Sandbox, poolQueueSize = 128, security = Some(SecuritySettings(un, pw)))
 
   val req1 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(1)).batch()
   val resp1 = Await.result(req1, 30.seconds)
   println(resp1)
 
-  val req2 = client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50).withOrderBy(OrderBy("description", OrderBy.Ascending))).stream
+  val req2 =
+    client.definitions.listCurrencies(FiltrableQueryOptions().withTop(50).withOrderBy(OrderBy("description", OrderBy.Ascending))).stream
   val resp2f = req2.runForeach(x => println(x))
   val resp2 = Await.result(resp2f, 30.seconds)
   println(resp2)
@@ -62,7 +65,7 @@ object Example extends App {
 
   val req6valid = client.taxRates.byPostalCode("US", "35802")
   val req6invalid = client.taxRates.byPostalCode("USUS", "123123123123")
-  val req6:Future[Either[ErrorInfo, TaxRateModel]]  = req6invalid().map(Right.apply).recover {
+  val req6: Future[Either[ErrorInfo, TaxRateModel]] = req6invalid().map(Right.apply).recover {
     case AvataxException(ErrorResult(Some(e))) => Left(e)
   }
   val resp6 = Await.result(req6, 30.seconds)
